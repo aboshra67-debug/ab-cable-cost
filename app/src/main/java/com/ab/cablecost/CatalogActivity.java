@@ -427,14 +427,14 @@ public class CatalogActivity extends Activity {
         return names;
     }
     double getPrice(String name){
-        return Double.longBitsToDouble(pref.getLong("price:"+name,
+        return Double.longBitsToDouble(pref.getLong("price:"+savedCurrency()+":"+name,
             Double.doubleToLongBits(0)));
     }
     String getUnit(String name){return pref.getString("unit:"+name,"كيلو");}
     void showPrices(){
         body.removeAllViews();rows.clear();page=null;
         LinearLayout c=card("الأسعار المركزية للخامات");
-        c.addView(text("السعر ده لكل وحدة شراء، وبيستخدم في الحسابات الجديدة. لو ما دخلتش سعر، الحساب هيفضل غير مكتمل.",13,MUTED,false));
+        c.addView(text("الأسعار محفوظة بشكل مستقل لكل عملة ووحدة شراء. تغيير العملة لا يحوّل الأسعار القديمة ولا يمسحها.",13,MUTED,false));
         button(c,"رجوع للكتالوج",()->showCatalog(),true);
         ArrayList<String> items=new ArrayList<>(materialNames());
         List<EditText> priceFields=new ArrayList<>();
@@ -458,7 +458,7 @@ public class CatalogActivity extends Activity {
                 for(int i=0;i<items.size();i++){
                     double price=value(priceFields.get(i),"سعر "+items.get(i),true);
                     if(Double.isNaN(price))price=0;
-                    ed.putLong("price:"+items.get(i),Double.doubleToLongBits(price));
+                    ed.putLong("price:"+savedCurrency()+":"+items.get(i),Double.doubleToLongBits(price));
                     ed.putString("unit:"+items.get(i),String.valueOf(unitFields.get(i).getSelectedItem()));
                 }
                 ed.apply();message("تم حفظ أسعار الخامات ووحداتها.");
@@ -496,7 +496,7 @@ public class CatalogActivity extends Activity {
         int index=Arrays.asList(currencies).indexOf(savedCurrency());
         if(index>=0)currenciesSpinner.setSelection(index);
         gap(card,8);
-        card.addView(text("العملات الأخرى وأسعار الصرف المحوّلة تلقائيًا هتضاف لاحقًا؛ الأسعار هنا بعملة المصنع فقط.",12,MUTED,false));
+        card.addView(text("أسعار كل عملة محفوظة منفصلة؛ التحويل التلقائي بين العملات لسه مش متاح.",12,MUTED,false));
         button(card,"حفظ الإعدادات",()->{
             pref.edit().putString("factoryName",company.getText().toString().trim())
                 .putString("currency",String.valueOf(currenciesSpinner.getSelectedItem()))
