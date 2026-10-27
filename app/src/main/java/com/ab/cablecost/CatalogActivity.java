@@ -210,6 +210,16 @@ public class CatalogActivity extends Activity {
             }
         }
         refreshModels();
+        String wanted=getIntent().getStringExtra("specId");
+        if(wanted!=null){
+            for(int j=0;j<matches.size();j++){
+                if(wanted.equals(matches.get(j).id)){
+                    model.setSelection(j);
+                    renderSpec();
+                    break;
+                }
+            }
+        }
     }
     AdapterView.OnItemSelectedListener onSelect(Runnable call) {
         return new AdapterView.OnItemSelectedListener(){
@@ -598,6 +608,10 @@ public class CatalogActivity extends Activity {
         gap(card,8);
         card.addView(text("أسعار كل عملة محفوظة منفصلة؛ التحويل التلقائي بين العملات لسه مش متاح.",12,MUTED,false));
         gap(card,14);
+        label(card,I18n.t(this,"language"));
+        Spinner uiLanguage=spinner(card,"العربية — Arabic","English","Français","Türkçe");
+        uiLanguage.setSelection(I18n.index(this));
+        gap(card,12);
         label(card,"لوجو المصنع");
         factoryLogoPreview=new ImageView(this);
         factoryLogoPreview.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -619,6 +633,7 @@ public class CatalogActivity extends Activity {
         card.addView(text("العربية — اللغة الحالية. دعم الإنجليزية وباقي اللغات قيد التطوير.",13,MUTED,false));
         gap(card,12);
         button(card,"حفظ الإعدادات",()->{
+            I18n.set(this,I18n.CODES[uiLanguage.getSelectedItemPosition()]);
             pref.edit().putString("factoryName",company.getText().toString().trim())
                 .putString("currency",String.valueOf(currenciesSpinner.getSelectedItem()))
                 .apply();
