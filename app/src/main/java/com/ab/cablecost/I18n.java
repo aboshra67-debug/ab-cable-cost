@@ -133,6 +133,8 @@ public final class I18n {
         add("openLinks","عرض الروابط المرشحة","View candidate links","Voir liens candidats","Aday bağlantıları aç");
         add("unverifiedLinkCaution","الروابط دي لسه قيد الفحص","These links are not verified","Liens non vérifiés","Bağlantılar doğrulanmadı");
         add("manufacturerDirectory","دليل الشركات — 150 قيد المراجعة","Company directory — 150 under review","Annuaire — 150 à vérifier","Şirket rehberi — 150 incelenecek");
+        add("matchingCompanies","شركات مطابقة للبحث","Matching companies","Entreprises correspondantes","Eşleşen şirketler");
+        add("seeCompanies","عرض كل الشركات","View all","Voir toutes","Tümünü gör");
         add("companiesSubhead","33 دولة | 47 كتالوج مرصود | 22 صفحة منتجات | 81 غير متحقق","33 countries | 47 catalog leads | 22 product pages | 81 unverified","33 pays | 47 catalogues candidats | 22 pages produits | 81 non vérifiés","33 ülke | 47 katalog adayı | 22 ürün sayfası | 81 doğrulanmadı");
 
     }
