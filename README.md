@@ -1,6 +1,6 @@
-# AB Cable Cost — V0.2.0 (Catalog & Recipe Safe Patch)
+# AB Cable Cost — V0.3.0 (Catalog & Recipe Safe Patch)
 
-**Android, offline-first.** Existing V0.1.2 conductor and insulation calculator is preserved. New `دليل الكابلات والمقاسات وتكلفة التصنيع` opens an independent catalogue screen.
+**Android, offline-first.** Approved AB Cable Cost logo is embedded as a verified binary PNG, with cable category pictures cropped from the approved visual reference. Version 0.3.0 opens on a dedicated home dashboard with cable families, a size-based catalogue and one-tap shortcuts for materials and factory settings. The original V0.1.2 standalone copper / insulation calculator remains preserved under CalculatorActivity. Existing V0.1.2 conductor and insulation calculator is preserved. New `دليل الكابلات والمقاسات وتكلفة التصنيع` opens an independent catalogue screen.
 
 ## Actual scope
 - Cable families: ترمو، كاميرات، إنذار حريق، شيلد.
