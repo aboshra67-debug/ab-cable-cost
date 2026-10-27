@@ -15,6 +15,10 @@ public final class CableCatalog {
     public static final String CAMERA = "كابلات كاميرات";
     public static final String FIRE = "كابلات إنذار حريق";
     public static final String SHIELD = "كابلات شيلد";
+    public static final String ARMORED = "كابلات مسلحة";
+    public static final String CONTROL = "كابلات كنترول";
+    public static final String INSULATED = "أسلاك معزولة";
+    public static final String SPECIAL = "كابلات مخصوصة";
 
     public static final String ELSEWEDY_POWER =
         "https://elsewedyelectric.com/pdf/Catalouges/02424280/elsewedy-cables-power-cables-catalogue.pdf";
@@ -87,6 +91,37 @@ public final class CableCatalog {
             "Cu/XLPE/PVC 0.6/1kV", 4, 2.5, 0, 0, 11.4, 210,
             "مرجع كابل أربعة قلوب 2.5 مم²؛ وزن الكابل المنشور لا يصلح كوزن النحاس.",
             ELSEWEDY_POWER, true, CU, XLPE, FILLER, PVC_J));
+
+        // Additional editable generic product recipes (not manufacturer-certified).
+        // No manufacturer dimensions or BOM yields are imputed to these templates.
+        for (int cores : new int[] {2, 3, 4}) {
+            for (double size : new double[] {1.0, 1.5, 2.5, 4.0, 6.0}) {
+                String ident = cores + "x" + String.valueOf(size).replace('.', '_');
+                SPECS.add(new Spec("TMP_A_"+ident, ARMORED, "قالب قابل للتعديل",
+                    cores+"×"+size+" مم²", "Cu/PVC/SWA/PVC — قالب غير معتمد",
+                    cores,size,0,0,0,0,
+                    "قالب مدرّع عام. لازم المصنع يحدد سمك العزل، كمية حديد التسليح، الحشو والغلاف.",
+                    "",false,CU,PVC_I,FILLER,"أسلاك تسليح",PVC_J));
+                SPECS.add(new Spec("TMP_CN_"+ident, CONTROL, "قالب قابل للتعديل",
+                    cores+"×"+size+" مم²", "Cu/PVC / optional Shield — قالب غير معتمد",
+                    cores,size,0,0,0,0,
+                    "عدد قلوب ومقاس اسمي قابل للتعديل، مع شيلد اختياري حسب التصميم.",
+                    "",false,CU,PVC_I,FOIL,DRAIN,PVC_J));
+            }
+        }
+        for (double size : new double[] {0.5,0.75,1.0,1.5,2.5,4,6,10,16,25}) {
+            SPECS.add(new Spec("TMP_W_"+String.valueOf(size).replace('.', '_'),
+                INSULATED,"قالب قابل للتعديل",size+" مم²",
+                "Single core flexible / solid — قالب غير معتمد",
+                1,size,0,0,0,0,
+                "أدخل التركيب الفعلي للموصل ونوع العزل وسُمكه من الداتا شيت.",
+                "",false,CU,PVC_I));
+        }
+        SPECS.add(new Spec("TMP_SPECIAL",SPECIAL,"قالب قابل للتعديل",
+            "كابل مخصوص حسب الطلب","Custom — غير معتمد",
+            0,0,0,0,0,0,
+            "ضيف خامات الكابل ومقاساته واستهلاك كل طبقة طبقًا لتصميم المصنع.",
+            "",false,CU,PVC_I,FOIL,DRAIN,FILLER,PVC_J));
 
         // Clearly labelled user-editable templates rather than manufacturer claims.
         for (int cores : new int[] {2, 3, 4, 5}) {
