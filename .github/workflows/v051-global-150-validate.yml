@@ -1,0 +1,50 @@
+name: Validate AB Cable Cost Global 150 Directory
+on:
+  push:
+    branches:
+      - feature/v051-global-150-manufacturers-directory-safe
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate imported research dataset
+        run: python3 tools/verify_manufacturer_directory.py
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Install Android SDK components
+        shell: bash
+        run: |
+          test -d "$ANDROID_HOME"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"
+      - name: Build Android debug APK
+        run: gradle :app:assembleDebug --no-daemon
+      - name: Confirm build data and APK
+        shell: bash
+        run: |
+          unzip -l app/build/outputs/apk/debug/app-debug.apk | grep -F 'assets/global_manufacturers_150.csv'
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AB-Cable-Cost-V0.5.1-Global-150-Debug-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+      - name: Prepare safe source archive
+        run: |
+          zip -rq AB_CABLE_COST_V0_5_1_GLOBAL_150_SAFE_SOURCE.zip . \
+            -x '.git/*' '.gradle/*' '*/build/*' 'AB_CABLE_COST_V0_5_1_GLOBAL_150_SAFE_SOURCE.zip'
+          unzip -t AB_CABLE_COST_V0_5_1_GLOBAL_150_SAFE_SOURCE.zip | tail -2
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AB-Cable-Cost-V0.5.1-Global-150-Safe-Source
+          path: AB_CABLE_COST_V0_5_1_GLOBAL_150_SAFE_SOURCE.zip
+          if-no-files-found: error
