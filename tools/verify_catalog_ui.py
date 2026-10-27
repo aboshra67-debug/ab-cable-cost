@@ -38,12 +38,19 @@ def tap(node):
     x1,y1,x2,y2=map(int,m.groups())
     adb("shell","input","tap",str((x1+x2)//2),str((y1+y2)//2))
 
-home=dump("screenshots/home.xml")
+home=None
+for _ in range(10):
+    home=dump("screenshots/home.xml")
+    if find_node(home,"ابدأ حساب الكابل"):
+        break
+    time.sleep(2)
+screenshot("home.png")
+print("HOME NODES:",[(n.attrib.get("class",""),n.attrib.get("text",""),
+                      n.attrib.get("content-desc","")) for n in home.iter("node")][:80])
 assert find_node(home,"AB Cable Cost"),"Brand title missing from home"
 assert find_node(home,"شعار AB Cable Cost الأصلي","content-desc"),"Approved AB logo missing"
 open_button=find_node(home,"ابدأ حساب الكابل")
 assert open_button is not None,"Main hero catalogue action missing"
-screenshot("home.png")
 tap(open_button)
 time.sleep(3)
 assert adb("shell","pidof","com.ab.cablecost").strip(),"App process exited"
