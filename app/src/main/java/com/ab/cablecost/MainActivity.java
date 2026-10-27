@@ -280,6 +280,19 @@ public class MainActivity extends Activity {
         titles.addView(label("AB Cable Cost", 22, Color.WHITE, true));
         titles.addView(label("حاسبة أوزان الكابلات", 12, GOLD, false));
 
+        Button openCatalogue = new Button(this);
+        openCatalogue.setText("دليل الكابلات والمقاسات وتكلفة التصنيع");
+        openCatalogue.setAllCaps(false);
+        openCatalogue.setTextColor(NAVY);
+        openCatalogue.setTextSize(15);
+        openCatalogue.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        openCatalogue.setBackgroundTintList(ColorStateList.valueOf(GOLD));
+        LinearLayout.LayoutParams catalogueButtonParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, dp(52));
+        root.addView(openCatalogue, catalogueButtonParams);
+        openCatalogue.setOnClickListener(v ->
+                startActivity(new android.content.Intent(MainActivity.this, CatalogActivity.class)));
+
         ScrollView scroll = new ScrollView(this);
         scroll.setFillViewport(false);
         scroll.setClipToPadding(false);
