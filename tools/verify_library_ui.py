@@ -103,6 +103,26 @@ screen("separate_brands_en.png")
 adb("shell","input","keyevent","4")
 tree,return_to_library=wait("Search results","library_return.xml")
 
+# Regression: the Company FILTER (not only the separate directory)
+# must list all imported manufacturers, with search and clear review badges.
+tree,company_filter=wait("Manufacturer","company_filter_chip.xml")
+tap(company_filter)
+tree,filter_input=wait("Search 150 company names","company_selector.xml","content-desc")
+assert node(tree,"Manufacturer (150)") is not None
+screen("manufacturer_filter_150.png")
+tap(filter_input)
+adb("shell","input","text","Hengtong")
+tree,hengtong=wait("Hengtong Group","company_selector_filtered.xml")
+assert node(tree,"Pending review") is not None
+screen("manufacturer_filter_search.png")
+tap(hengtong)
+tree,company_profile=wait("Hengtong Group","company_profile.xml")
+assert node(tree,"Pending review") is not None
+screen("manufacturer_selected_profile.png")
+adb("shell","input","keyevent","4")
+adb("shell","input","keyevent","4")
+tree,again=wait("Search results","after_profile.xml")
+
 # One search bar must now find a company name without opening a hidden menu.
 tree,searchfield=wait("Search by maker","library_search_query.xml")
 tap(searchfield)
