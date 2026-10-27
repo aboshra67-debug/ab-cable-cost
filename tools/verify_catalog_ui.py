@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-"""Navigate to the catalogue through the user-visible home button.
-Does not export the private CatalogActivity to other applications.
+"""End-to-end smoke test of approved home, original AB logo and cable catalogue.
+
+Run inside Android 15 emulator after installing the APK.
+Never export a private Android Activity to make tests pass.
 """
 import re
 import subprocess
@@ -13,33 +15,41 @@ Path("screenshots").mkdir(exist_ok=True)
 def adb(*args):
     return subprocess.check_output(["adb", *args], text=True, stderr=subprocess.STDOUT)
 
-def dump(path):
-    adb("shell", "uiautomator", "dump", "/sdcard/window.xml")
-    subprocess.check_call(["adb", "pull", "/sdcard/window.xml", str(path)])
-    return ET.parse(path).getroot()
+def dump(name):
+    adb("shell","uiautomator","dump","/sdcard/window.xml")
+    subprocess.check_call(["adb","pull","/sdcard/window.xml",str(name)])
+    return ET.parse(name).getroot()
 
-home = dump("screenshots/home.xml")
-button = None
-for node in home.iter("node"):
-    txt = node.attrib.get("text", "")
-    if "دليل الكابلات والمقاسات وتكلفة التصنيع" in txt:
-        button = node
-        break
-if button is None:
-    raise RuntimeError("Home screen catalogue button not found")
-bounds = button.attrib.get("bounds", "")
-m = re.fullmatch(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]", bounds)
-if not m:
-    raise RuntimeError("Invalid home button bounds: " + bounds)
-x1,y1,x2,y2 = map(int,m.groups())
-adb("shell","input","tap",str((x1+x2)//2),str((y1+y2)//2))
+def find_node(root, token, field="text"):
+    for node in root.iter("node"):
+        if token in node.attrib.get(field,""):
+            return node
+    return None
+
+def screenshot(name):
+    adb("shell","screencap","-p","/sdcard/Download/ab_image.png")
+    subprocess.check_call(["adb","pull","/sdcard/Download/ab_image.png","screenshots/"+name])
+
+def tap(node):
+    bounds=node.attrib.get("bounds","")
+    m=re.fullmatch(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]",bounds)
+    if not m:
+        raise RuntimeError("Invalid control bounds: "+bounds)
+    x1,y1,x2,y2=map(int,m.groups())
+    adb("shell","input","tap",str((x1+x2)//2),str((y1+y2)//2))
+
+home=dump("screenshots/home.xml")
+assert find_node(home,"AB Cable Cost"),"Brand title missing from home"
+assert find_node(home,"شعار AB Cable Cost الأصلي","content-desc"),"Approved AB logo missing"
+open_button=find_node(home,"ابدأ حساب الكابل")
+assert open_button is not None,"Main hero catalogue action missing"
+screenshot("home.png")
+tap(open_button)
 time.sleep(3)
-catalog = dump("screenshots/catalog.xml")
-texts = " ".join(node.attrib.get("text", "") for node in catalog.iter("node"))
-if "اختار الكابل" not in texts and "اختار الكابل والمقاس" not in texts:
-    raise RuntimeError("Catalogue did not become visible after opening")
-if "أسعار الخامات المركزية" not in texts:
-    raise RuntimeError("Material pricing shortcut missing")
-adb("shell", "screencap", "-p", "/sdcard/Download/ab_catalog_ui.png")
-subprocess.check_call(["adb","pull","/sdcard/Download/ab_catalog_ui.png","screenshots/catalog.png"])
-print("PASS: MainActivity to CatalogActivity via UI, catalogue controls visible")
+assert adb("shell","pidof","com.ab.cablecost").strip(),"App process exited"
+catalog=dump("screenshots/catalog.xml")
+assert find_node(catalog,"اختار الكابل والمقاس"),"Catalogue selection card missing"
+assert find_node(catalog,"أسعار الخامات المركزية"),"Central prices shortcut missing"
+assert find_node(catalog,"شعار AB Cable Cost الأصلي","content-desc"),"Catalogue logo missing"
+screenshot("catalog.png")
+print("PASS: Approved AB logo visible, home action works, catalogue/price controls open on Android 15")
