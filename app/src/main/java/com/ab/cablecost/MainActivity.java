@@ -14,7 +14,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
-import android.view.WindowInsetsController;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -84,23 +83,10 @@ public class MainActivity extends Activity {
 
     @Override public void onCreate(Bundle saved){
         super.onCreate(saved);
-        forceLightIcons();
-        build();
-    }
-    private void forceLightIcons(){
         getWindow().setStatusBarColor(NAVY);
         getWindow().setNavigationBarColor(NAVY);
-        if(Build.VERSION.SDK_INT>=30 && getWindow().getInsetsController()!=null){
-            getWindow().getInsetsController().setSystemBarsAppearance(0,
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS|
-                WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
-        }else{
-            getWindow().getDecorView().setSystemUiVisibility(0);
-        }
-    }
-    @Override public void onWindowFocusChanged(boolean focused){
-        super.onWindowFocusChanged(focused);
-        if(focused)forceLightIcons();
+        getWindow().getDecorView().setSystemUiVisibility(0);
+        build();
     }
     @Override protected void onResume(){
         super.onResume();
