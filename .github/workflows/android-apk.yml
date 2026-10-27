@@ -82,5 +82,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: AB-Cable-Cost-V0.3.0-UI-Preview
-          path: |\n            screenshots/home.png\n            screenshots/catalog.png\n            screenshots/home.xml\n            screenshots/catalog.xml
+          path: |
+            screenshots/home.png
+            screenshots/catalog.png
+            screenshots/home.xml
+            screenshots/catalog.xml
           if-no-files-found: error
