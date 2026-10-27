@@ -160,8 +160,8 @@ public class CatalogActivity extends Activity {
         family.setOnItemSelectedListener(onSelect(()->refreshModels()));
         maker.setOnItemSelectedListener(onSelect(()->refreshModels()));
         model.setOnItemSelectedListener(onSelect(()->renderSpec()));
-        refreshModels();
         page=vertical();body.addView(page);
+        refreshModels();
     }
     AdapterView.OnItemSelectedListener onSelect(Runnable call) {
         return new AdapterView.OnItemSelectedListener(){
@@ -318,7 +318,7 @@ public class CatalogActivity extends Activity {
         if(optional&&b.length()==0)return Double.NaN;
         try{
             double n=Double.parseDouble(b.toString());
-            if(!Double.isFinite(n)||n<0)throw new NumberFormatException();
+            if(Double.isInfinite(n)||Double.isNaN(n)||n<0)throw new NumberFormatException();
             return n;
         }catch(Exception e){throw new IllegalArgumentException("راجع "+field+"؛ محتاج رقم صحيح غير سالب.");}
     }
