@@ -226,7 +226,7 @@ public class MainActivity extends Activity {
     private void setMode(int selected) {
         weighFields.setVisibility(selected == 0 ? View.VISIBLE : View.GONE);
         geometryFields.setVisibility(selected == 1 ? View.VISIBLE : View.GONE);
-        insulationResult.setVisibility(View.GONE);
+        if (insulationResult != null) insulationResult.setVisibility(View.GONE);
     }
 
     @Override
