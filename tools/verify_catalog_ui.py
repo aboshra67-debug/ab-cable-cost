@@ -47,16 +47,16 @@ for _ in range(10):
 screenshot("home.png")
 print("HOME NODES:",[(n.attrib.get("class",""),n.attrib.get("text",""),
                       n.attrib.get("content-desc","")) for n in home.iter("node")][:80])
-assert find_node(home,"AB Cable Cost"),"Brand title missing from home"
-assert find_node(home,"شعار AB Cable Cost الأصلي","content-desc"),"Approved AB logo missing"
+assert find_node(home,"AB Cable Cost") is not None,"Brand title missing from home"
+assert find_node(home,"شعار AB Cable Cost الأصلي","content-desc") is not None,"Approved AB logo missing"
 open_button=find_node(home,"ابدأ حساب الكابل")
 assert open_button is not None,"Main hero catalogue action missing"
 tap(open_button)
 time.sleep(3)
 assert adb("shell","pidof","com.ab.cablecost").strip(),"App process exited"
 catalog=dump("screenshots/catalog.xml")
-assert find_node(catalog,"اختار الكابل والمقاس"),"Catalogue selection card missing"
-assert find_node(catalog,"أسعار الخامات المركزية"),"Central prices shortcut missing"
-assert find_node(catalog,"شعار AB Cable Cost الأصلي","content-desc"),"Catalogue logo missing"
+assert find_node(catalog,"اختار الكابل والمقاس") is not None,"Catalogue selection card missing"
+assert find_node(catalog,"أسعار الخامات المركزية") is not None,"Central prices shortcut missing"
+assert find_node(catalog,"شعار AB Cable Cost الأصلي","content-desc") is not None,"Catalogue logo missing"
 screenshot("catalog.png")
 print("PASS: Approved AB logo visible, home action works, catalogue/price controls open on Android 15")
