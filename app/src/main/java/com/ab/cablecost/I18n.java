@@ -114,6 +114,27 @@ public final class I18n {
         add("verifiedCount","موديلات موثقة حاليًا","Verified models so far","Modèles vérifiés","Şimdiye kadar doğrulanan modeller");
 
         add("all","الكل","All","Tout","Tümü");
+
+        add("directoryTitle","دليل شركات الكابلات العالمية","Global Cable Companies Directory","Annuaire mondial des câbliers","Küresel Kablo Şirketleri Rehberi");
+        add("directoryWarning","تنبيه: الشركات دي مرشحة للبحث، ولسه مش موثقة أو معتمدة فنيًا. بيانات الكابلات الموثقة في المكتبة منفصلة.","Research candidates only: companies, links and catalogs have NOT yet been independently verified. Technical cable records stay separate.","Candidats de recherche : entreprises et catalogues non vérifiés. Les fiches techniques sont séparées.","Araştırma adayları: şirketler ve kataloglar henüz doğrulanmadı. Teknik kablo kayıtları ayrıdır.");
+        add("factoryCandidates","شركات مرشحة","Company candidates","Entreprises candidates","Şirket adayları");
+        add("separateBrands","علامات وكيانات مستقلة","Separate brands","Marques séparées","Ayrı markalar");
+        add("directorySearch","ابحث باسم الشركة أو الدولة","Search company or country","Rechercher entreprise ou pays","Şirket veya ülke ara");
+        add("pendingReviewOnly","قيد المراجعة — غير معتمد","Pending review — unverified","En cours de vérification","İnceleme bekliyor — doğrulanmadı");
+        add("brandsOnly","علامات / جهات أخرى — لا تُحسب من المصنعين","Brands / other entities — not counted as factories","Marques / entités hors fabricants","Markalar / diğer şirketler — üretici sayılmaz");
+        add("reviewFilter","حالة المراجعة","Review status","État de vérification","İnceleme durumu");
+        add("catalogIndexCandidate","رابط كتالوج أو مركز تحميل مرصود — لم يُراجع","Candidate catalog/download page — not reviewed","Catalogue candidat — non vérifié","Katalog adayı — incelenmedi");
+        add("productsOnlyCandidate","صفحة منتجات مرصودة فقط — لم تُراجع","Candidate product page — not reviewed","Page produit candidate — non vérifiée","Ürün sayfası adayı — incelenmedi");
+        add("unverifiedCatalog","الكتالوج غير متحقق","Catalog not verified","Catalogue non vérifié","Katalog doğrulanmadı");
+        add("researchDate","تاريخ البحث","Research date","Date de recherche","Araştırma tarihi");
+        add("websiteCandidate","موقع الشركة المرشح (غير متحقق)","Candidate company site (unchecked)","Site candidat (non vérifié)","Aday şirket sitesi (doğrulanmadı)");
+        add("catalogCandidate","رابط الكتالوج/المنتجات المرشح (غير متحقق)","Candidate catalog/product link (unchecked)","Lien catalogue candidat (non vérifié)","Aday katalog bağlantısı (doğrulanmadı)");
+        add("researchReference","مصدر البحث الأولي — لا يثبت المنتج","Research lead — not product proof","Source de recherche — pas une preuve","Araştırma kaynağı — ürün kanıtı değil");
+        add("openLinks","عرض الروابط المرشحة","View candidate links","Voir liens candidats","Aday bağlantıları aç");
+        add("unverifiedLinkCaution","الروابط دي لسه قيد الفحص","These links are not verified","Liens non vérifiés","Bağlantılar doğrulanmadı");
+        add("manufacturerDirectory","دليل الشركات — 150 قيد المراجعة","Company directory — 150 under review","Annuaire — 150 à vérifier","Şirket rehberi — 150 incelenecek");
+        add("companiesSubhead","33 دولة | 47 كتالوج مرصود | 22 صفحة منتجات | 81 غير متحقق","33 countries | 47 catalog leads | 22 product pages | 81 unverified","33 pays | 47 catalogues candidats | 22 pages produits | 81 non vérifiés","33 ülke | 47 katalog adayı | 22 ürün sayfası | 81 doğrulanmadı");
+
     }
     private static void add(String k,String ar,String en,String fr,String tr){
         TEXT.put(k,new String[]{ar,en,fr,tr});
