@@ -1,14 +1,15 @@
-name: Build & Install Test Android APK
+name: Build AB Cable Cost Android APK
 on:
   push:
     branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
+
 jobs:
-  apk:
+  build-apk:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -25,17 +26,45 @@ jobs:
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"
       - name: Build APK
         run: gradle :app:assembleDebug --no-daemon --stacktrace
-      - name: Verify APK format and signature
+      - name: Verify APK signature and Android package
         shell: bash
         run: |
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs app/build/outputs/apk/debug/app-debug.apk
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging app/build/outputs/apk/debug/app-debug.apk | head -20
           sha256sum app/build/outputs/apk/debug/app-debug.apk
-      - name: Configure KVM
+      - name: Publish build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AB-Cable-Cost-V0.2.0-Debug-APK
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+      - name: Prepare Safe Source archive
         shell: bash
         run: |
+          zip -rq AB_CABLE_COST_V0_2_0_SAFE_SOURCE.zip . \
+            -x '.git/*' '.gradle/*' '*/build/*' 'screenshots/*' 'AB_CABLE_COST_V0_2_0_SAFE_SOURCE.zip'
+          unzip -t AB_CABLE_COST_V0_2_0_SAFE_SOURCE.zip | tail -2
+      - name: Publish Safe Source
+        uses: actions/upload-artifact@v4
+        with:
+          name: AB-Cable-Cost-V0.2.0-Safe-Source
+          path: AB_CABLE_COST_V0_2_0_SAFE_SOURCE.zip
+          if-no-files-found: error
+
+  emulator-smoke:
+    needs: build-apk
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: AB-Cable-Cost-V0.2.0-Debug-APK
+          path: artifact
+      - name: Configure KVM
+        run: |
           if test -e /dev/kvm; then sudo chmod 666 /dev/kvm; fi
-      - name: Verify install and app launch on Android 15 emulator
+      - name: Verify install and catalogue navigation on Android 15
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
@@ -44,45 +73,14 @@ jobs:
           profile: pixel_6
           disable-animations: true
           script: |
-            adb install -r app/build/outputs/apk/debug/app-debug.apk
+            adb install -r artifact/app-debug.apk
             adb shell am start -W -n com.ab.cablecost/.MainActivity
-            sleep 3
+            sleep 2
             adb shell pidof com.ab.cablecost
-            mkdir -p screenshots
-            adb shell screencap -p /sdcard/Download/ab_cable_ui.png
-            adb pull /sdcard/Download/ab_cable_ui.png screenshots/home.png
-            adb shell am start -W -n com.ab.cablecost/.CatalogActivity
-            sleep 3
-            adb shell pidof com.ab.cablecost
-            adb shell uiautomator dump /sdcard/window.xml
-            adb pull /sdcard/window.xml screenshots/catalog.xml
-            grep -F 'دليل الكابلات' screenshots/catalog.xml
-            adb shell screencap -p /sdcard/Download/ab_catalog_ui.png
-            adb pull /sdcard/Download/ab_catalog_ui.png screenshots/catalog.png
-      - name: Upload APK after installation test
-        uses: actions/upload-artifact@v4
-        with:
-          name: AB-Cable-Cost-V0.2.0-Verified-APK
-          path: app/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
-
-      - name: Create reproducible Safe Source ZIP
-        shell: bash
-        run: |
-          zip -rq AB_CABLE_COST_V0_2_0_CATALOG_SAFE_SOURCE.zip . -x '.git/*' '.gradle/*' '*/build/*' 'screenshots/*' 'AB_CABLE_COST_V0_2_0_CATALOG_SAFE_SOURCE.zip'
-          unzip -t AB_CABLE_COST_V0_2_0_CATALOG_SAFE_SOURCE.zip | tail -2
-      - name: Upload Safe Source ZIP
-        uses: actions/upload-artifact@v4
-        with:
-          name: AB-Cable-Cost-V0.2.0-Safe-Source
-          path: AB_CABLE_COST_V0_2_0_CATALOG_SAFE_SOURCE.zip
-          if-no-files-found: error
-      - name: Upload emulator screenshot
+            python3 tools/verify_catalog_ui.py
+      - name: Publish UI preview
         uses: actions/upload-artifact@v4
         with:
           name: AB-Cable-Cost-V0.2.0-UI-Preview
-          path: |
-            screenshots/home.png
-            screenshots/catalog.png
-            screenshots/catalog.xml
+          path: screenshots/catalog.png
           if-no-files-found: error
