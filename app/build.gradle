@@ -8,7 +8,7 @@ android {
         applicationId 'com.ab.cablecost'
         minSdk 23
         targetSdk 35
-        versionCode 2
-        versionName '0.1.1-install-fix'
+        versionCode 3
+        versionName '0.1.2-ui-safe'
     }
 }
