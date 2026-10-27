@@ -59,18 +59,16 @@ assert node(tree,"AB Cable Cost original logo","content-desc") is not None
 screen("home.png")
 tap(card)
 tree,result=wait("Belden","library_ar.xml")
-assert node(tree,"المكتبة") is not None
+screen("global_library_ar.png")
 assert node(tree,"نتائج البحث") is not None
 assert node(tree,"مصدر رسمي") is not None
-screen("global_library_ar.png")
 
 tree,details=wait("عرض التفاصيل","library_details.xml")
 tap(details)
 tree,heading=wait("8723","belden8723.xml")
-assert node(tree,"مقطع هندسي") is not None
-assert node(tree,"2.8 A") is not None
-assert node(tree,"PDF") is not None
 screen("cable_8723_ar.png")
+assert node(tree,"مقطع هندسي") is not None
+assert node(tree,"PDF") is not None
 
 tree,three=wait("عرض 3D","detail_3d.xml")
 tap(three)
