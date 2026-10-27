@@ -33,7 +33,8 @@ import java.util.Set;
  * Each displayed record has a traceable official manufacturer URL.
  */
 public class LibraryActivity extends Activity {
-    private LinearLayout root, content, results, filters, types;
+    private LinearLayout root, content, results, filters, types, companyMatches;
+    private final List<ManufacturerCandidates.Record> candidates=new ArrayList<>();
     private EditText search;
     private SharedPreferences pref;
     private String brand="*", country="*", category="*", voltage="*", size="*";
@@ -56,6 +57,9 @@ public class LibraryActivity extends Activity {
     @Override public void onCreate(Bundle state){
         super.onCreate(state);
         pref=getSharedPreferences("ab_global_cable_library",MODE_PRIVATE);
+        // The research company directory is part of the searchable library, but
+        // its unverified candidates never become verified product datasheets.
+        candidates.addAll(ManufacturerCandidates.all(this));
         pendingQuery=getIntent().getStringExtra("query");
         if(pendingQuery==null)pendingQuery="";
         String preset=getIntent().getStringExtra("category");
@@ -98,12 +102,14 @@ public class LibraryActivity extends Activity {
         TextView intro=label(t("libraryHeadline"),13,GOLD,true);
         intro.setGravity(Gravity.CENTER);
         content.addView(intro,LibraryUi.lp(this,-1,30));
+        // One clearly visible entry point (above the fold, before the technical
+        // cable filters), instead of hiding 150 names beneath the cable tiles.
+        candidateDirectoryEntry();
         searchBox();
+        companyMatches=col();
+        content.addView(companyMatches,LibraryUi.lp(this,-1,-2));
         filterChips();
         categoryCards();
-        // Dedicated research directory: never merge company candidates with
-        // manufacturer-sourced technical product records in VerifiedCableData.
-        candidateDirectoryEntry();
         LinearLayout heading=row();
         LinearLayout.LayoutParams hp=LibraryUi.lp(this,-1,44);hp.topMargin=d(10);
         content.addView(heading,hp);
@@ -251,7 +257,7 @@ public class LibraryActivity extends Activity {
         details.setPadding(0,d(4),0,0);
         block.addView(details);
         LibraryUi.tappable(block,t("manufacturerDirectory"),
-            ()->startActivity(new Intent(this,ManufacturerDirectoryActivity.class)));
+            ()->openDirectory(""));
     }
 
     private void categoryCards(){
@@ -294,6 +300,7 @@ public class LibraryActivity extends Activity {
     private void updateResults(){
         if(results==null)return;
         results.removeAllViews();
+        updateCompanyMatches();
         List<VerifiedCableData.Cable> list=new ArrayList<>();
         for(VerifiedCableData.Cable c:VerifiedCableData.all()){
             if(matches(c))list.add(c);
@@ -313,6 +320,49 @@ public class LibraryActivity extends Activity {
             results.addView(empty,LibraryUi.lp(this,-1,-2));return;
         }
         for(VerifiedCableData.Cable c:list)resultCard(c);
+    }
+    /**
+     * Show manufacturer matches from the same search bar. This is NOT a list
+     * of sourced cable models; labels remain explicit "pending review" and
+     * no ampacity or voltage values are invented for a company name.
+     */
+    private void updateCompanyMatches(){
+        if(companyMatches==null)return;
+        companyMatches.removeAllViews();
+        final String term=pendingQuery.trim().toLowerCase(Locale.ROOT);
+        if(term.isEmpty())return; // keep the home screen clean
+        final List<ManufacturerCandidates.Record> matches=new ArrayList<>();
+        for(ManufacturerCandidates.Record r:candidates){
+            if(r.searchKey().contains(term))matches.add(r);
+        }
+        if(matches.isEmpty())return;
+        final LinearLayout summary=row();
+        summary.setGravity(Gravity.CENTER_VERTICAL);
+        LinearLayout.LayoutParams sp=LibraryUi.lp(this,-1,37);sp.topMargin=d(5);
+        companyMatches.addView(summary,sp);
+        TextView title=label(t("matchingCompanies")+" ("+matches.size()+")",15,GOLD,true);
+        summary.addView(title,new LinearLayout.LayoutParams(0,-1,1));
+        TextView all=LibraryUi.chip(this,t("seeCompanies"),false,()->openDirectory(pendingQuery));
+        summary.addView(all,LibraryUi.lp(this,-2,32));
+        final int count=Math.min(5,matches.size());
+        for(int i=0;i<count;i++){
+            ManufacturerCandidates.Record record=matches.get(i);
+            LinearLayout card=row();card.setPadding(d(9),d(7),d(9),d(7));
+            card.setBackground(LibraryUi.bg(this,LibraryUi.MID,9,LibraryUi.BORDER));
+            LinearLayout.LayoutParams cp=LibraryUi.lp(this,-1,-2);cp.bottomMargin=d(5);
+            companyMatches.addView(card,cp);
+            LinearLayout info=col();card.addView(info,new LinearLayout.LayoutParams(0,-2,1));
+            info.addView(label(record.name,14,LibraryUi.WHITE,true));
+            info.addView(label(record.countryAr+"  ·  "+t("pendingReviewOnly"),11,LibraryUi.MUTED,false));
+            TextView arrow=label(isAr()?"‹":"›",22,GOLD,true);
+            card.addView(arrow,LibraryUi.lp(this,27,-1));
+            LibraryUi.tappable(card,record.name,()->openDirectory(record.name));
+        }
+    }
+    private void openDirectory(String query){
+        Intent i=new Intent(this,ManufacturerDirectoryActivity.class);
+        if(query!=null&&!query.trim().isEmpty())i.putExtra("query",query.trim());
+        startActivity(i);
     }
     private void resultCard(VerifiedCableData.Cable c){
         LinearLayout box=col();
