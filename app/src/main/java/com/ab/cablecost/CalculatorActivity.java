@@ -267,10 +267,11 @@ public class CalculatorActivity extends Activity {
         root.addView(header, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        TextView logo = label("AB", 18, GOLD, true);
-        logo.setGravity(Gravity.CENTER);
-        logo.setBackground(background(Color.rgb(29, 47, 72), 12, GOLD));
-        header.addView(logo, new LinearLayout.LayoutParams(dp(47), dp(47)));
+        android.widget.ImageView logo = new android.widget.ImageView(this);
+        logo.setImageResource(R.drawable.ab_brand_logo);
+        logo.setScaleType(android.widget.ImageView.ScaleType.FIT_CENTER);
+        logo.setContentDescription("شعار AB Cable Cost الأصلي");
+        header.addView(logo, new LinearLayout.LayoutParams(dp(85), dp(61)));
 
         LinearLayout titles = column();
         LinearLayout.LayoutParams titleParams =
