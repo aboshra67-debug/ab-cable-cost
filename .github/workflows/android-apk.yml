@@ -82,6 +82,7 @@ jobs:
             adb shell pidof com.ab.cablecost
             python3 tools/verify_catalog_ui.py
       - name: Publish UI preview
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: AB-Cable-Cost-V0.3.0-UI-Preview
@@ -90,4 +91,4 @@ jobs:
             screenshots/catalog.png
             screenshots/home.xml
             screenshots/catalog.xml
-          if-no-files-found: error
+          if-no-files-found: warn
