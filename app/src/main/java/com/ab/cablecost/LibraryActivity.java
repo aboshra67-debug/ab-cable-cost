@@ -98,6 +98,12 @@ public class LibraryActivity extends Activity {
         TextView intro=label(t("libraryHeadline"),13,GOLD,true);
         intro.setGravity(Gravity.CENTER);
         content.addView(intro,LibraryUi.lp(this,-1,30));
+        TextView directory=LibraryUi.button(this,
+            isAr()?"دليل 150 شركة كابلات عالمية":"150 Global Cable Manufacturers",
+            true,()->startActivity(new Intent(this,ManufacturersActivity.class)));
+        LinearLayout.LayoutParams dirp=LibraryUi.lp(this,-1,48);
+        dirp.topMargin=d(7);dirp.bottomMargin=d(8);
+        content.addView(directory,dirp);
         searchBox();
         filterChips();
         categoryCards();
