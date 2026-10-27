@@ -105,7 +105,7 @@ tree,return_to_library=wait("Search results","library_return.xml")
 
 # Regression: the Company FILTER (not only the separate directory)
 # must list all imported manufacturers, with search and clear review badges.
-tree,company_filter=wait("Manufacturer","company_filter_chip.xml")
+tree,company_filter=wait("Manufacturer ⌄","company_filter_chip.xml","content-desc")
 tap(company_filter)
 tree,filter_input=wait("Search 150 company names","company_selector.xml","content-desc")
 assert node(tree,"Manufacturer (150)") is not None
