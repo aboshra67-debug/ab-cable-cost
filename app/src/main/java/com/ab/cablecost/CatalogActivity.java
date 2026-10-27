@@ -45,6 +45,8 @@ public class CatalogActivity extends Activity {
     LinearLayout root, page, body;
     Spinner family, maker, model;
     LinearLayout sizeCards;
+    private ImageView factoryLogoPreview;
+    private static final int PICK_FACTORY_LOGO=7104;
     CableCatalog.Spec selected;
     final List<CableCatalog.Spec> matches=new ArrayList<>();
     final List<Row> rows=new ArrayList<>();
@@ -595,6 +597,27 @@ public class CatalogActivity extends Activity {
         if(index>=0)currenciesSpinner.setSelection(index);
         gap(card,8);
         card.addView(text("أسعار كل عملة محفوظة منفصلة؛ التحويل التلقائي بين العملات لسه مش متاح.",12,MUTED,false));
+        gap(card,14);
+        label(card,"لوجو المصنع");
+        factoryLogoPreview=new ImageView(this);
+        factoryLogoPreview.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        factoryLogoPreview.setBackground(bg(PAGE,12,BORDER));
+        factoryLogoPreview.setPadding(dp(9),dp(9),dp(9),dp(9));
+        card.addView(factoryLogoPreview,new LinearLayout.LayoutParams(-1,dp(92)));
+        displayFactoryLogo();
+        button(card,"اختار صورة لوجو المصنع",()->{
+            Intent intent=new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.setType("image/*");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|
+                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+            startActivityForResult(intent,PICK_FACTORY_LOGO);
+        },true);
+        card.addView(text("اللوجو المحفوظ ده خاص بالمصنع، ولوجو AB الأصلي بيفضل ثابت للبرنامج.",12,MUTED,false));
+        gap(card,12);
+        label(card,"لغة الواجهة");
+        card.addView(text("العربية — اللغة الحالية. دعم الإنجليزية وباقي اللغات قيد التطوير.",13,MUTED,false));
+        gap(card,12);
         button(card,"حفظ الإعدادات",()->{
             pref.edit().putString("factoryName",company.getText().toString().trim())
                 .putString("currency",String.valueOf(currenciesSpinner.getSelectedItem()))
@@ -603,4 +626,31 @@ public class CatalogActivity extends Activity {
         },false);
         button(card,"رجوع للكتالوج",()->showCatalog(),true);
     }
+    private void displayFactoryLogo(){
+        if(factoryLogoPreview==null)return;
+        String stored=pref.getString("factory_logo_uri","");
+        if(stored.length()==0){
+            factoryLogoPreview.setImageResource(R.drawable.ab_brand_logo);
+            return;
+        }
+        try{factoryLogoPreview.setImageURI(Uri.parse(stored));}
+        catch(Exception e){factoryLogoPreview.setImageResource(R.drawable.ab_brand_logo);}
+    }
+
+    @Override protected void onActivityResult(int requestCode,int resultCode,Intent result){
+        super.onActivityResult(requestCode,resultCode,result);
+        if(requestCode!=PICK_FACTORY_LOGO||resultCode!=RESULT_OK||
+           result==null||result.getData()==null)return;
+        Uri uri=result.getData();
+        try{
+            getContentResolver().takePersistableUriPermission(uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            pref.edit().putString("factory_logo_uri",uri.toString()).apply();
+            displayFactoryLogo();
+            message("اتحفظ لوجو المصنع على الجهاز.");
+        }catch(Exception e){
+            message("مقدرتش أحفظ صلاحية الصورة. اختار صورة تانية من الملفات.");
+        }
+    }
+
 }
