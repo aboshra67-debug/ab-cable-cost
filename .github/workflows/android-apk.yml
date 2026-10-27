@@ -38,20 +38,20 @@ jobs:
       - name: Publish build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.3.0-Debug-APK
+          name: AB-Cable-Cost-V0.4.0-Debug-APK
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
       - name: Prepare Safe Source archive
         shell: bash
         run: |
-          zip -rq AB_CABLE_COST_V0_3_0_SAFE_SOURCE.zip . \
-            -x '.git/*' '.gradle/*' '*/build/*' 'screenshots/*' 'AB_CABLE_COST_V0_3_0_SAFE_SOURCE.zip'
-          unzip -t AB_CABLE_COST_V0_3_0_SAFE_SOURCE.zip | tail -2
+          zip -rq AB_CABLE_COST_V0_4_0_SAFE_SOURCE.zip . \
+            -x '.git/*' '.gradle/*' '*/build/*' 'screenshots/*' 'AB_CABLE_COST_V0_4_0_SAFE_SOURCE.zip'
+          unzip -t AB_CABLE_COST_V0_4_0_SAFE_SOURCE.zip | tail -2
       - name: Publish Safe Source
         uses: actions/upload-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.3.0-Safe-Source
-          path: AB_CABLE_COST_V0_3_0_SAFE_SOURCE.zip
+          name: AB-Cable-Cost-V0.4.0-Safe-Source
+          path: AB_CABLE_COST_V0_4_0_SAFE_SOURCE.zip
           if-no-files-found: error
 
   emulator-smoke:
@@ -62,7 +62,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.3.0-Debug-APK
+          name: AB-Cable-Cost-V0.4.0-Debug-APK
           path: artifact
       - name: Configure KVM
         run: |
@@ -85,10 +85,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.3.0-UI-Preview
+          name: AB-Cable-Cost-V0.4.0-UI-Preview
           path: |
-            screenshots/home.png
+            screenshots/engineering_home_ar.png
+            screenshots/engineering_home_en.png
             screenshots/catalog.png
-            screenshots/home.xml
-            screenshots/catalog.xml
+            screenshots/*.xml
           if-no-files-found: warn
