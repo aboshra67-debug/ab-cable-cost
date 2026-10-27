@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
         getWindow().setStatusBarColor(NAVY);
         getWindow().setNavigationBarColor(NAVY);
         getWindow().getDecorView().setSystemUiVisibility(0);
-        root=column();root.setBackgroundColor(BG);setContentView(root);
+        root=column();root.setBackgroundColor(NAVY);setContentView(root);
         if(Build.VERSION.SDK_INT>=21){
             root.setOnApplyWindowInsetsListener((v,i)->{
                 int top,bottom;
@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
             root.requestApplyInsets();
         }
         makeHeader();
-        ScrollView scroll=new ScrollView(this);scroll.setFillViewport(false);
+        ScrollView scroll=new ScrollView(this);scroll.setBackgroundColor(BG);scroll.setFillViewport(false);
         scroll.setClipToPadding(false);
         root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
         main=column();main.setPadding(px(16),px(17),px(16),px(25));scroll.addView(main);
