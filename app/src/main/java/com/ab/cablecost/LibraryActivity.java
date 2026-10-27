@@ -15,6 +15,8 @@ import android.view.WindowInsets;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -214,6 +216,7 @@ public class LibraryActivity extends Activity {
         sorted.add(0,t("all"));return sorted.toArray(new String[0]);
     }
     private void filterDialog(String field){
+        if(field.equals("brand")){manufacturerChooser();return;}
         String[] opts=uniqueOptions(field);
         new AlertDialog.Builder(this).setTitle(
             field.equals("brand")?t("manufacturer"):field.equals("country")?t("country"):
@@ -232,6 +235,98 @@ public class LibraryActivity extends Activity {
                 else size=value;
                 refreshDynamicSections();
             }).setNegativeButton(t("cancel"),null).show();
+    }
+    /** Sorted, de-duplicated choice of every manufacturer name in the
+     * uploaded directory. Only existing source-backed products get a ✓.
+     * A pending candidate opens its actual directory record, NEVER a fabricated
+     * technical product search yielding zero cables.
+     */
+    private static final class ManufacturerChoice {
+        final String name, recordId;
+        final boolean withVerifiedProducts;
+        ManufacturerChoice(String name,String recordId,boolean verified){
+            this.name=name;this.recordId=recordId;this.withVerifiedProducts=verified;
+        }
+    }
+    private void manufacturerChooser(){
+        // The same manufacturer can exist in a research directory AND have
+        // officially sourced product records (Belden, Elsewedy). Show it once.
+        final List<ManufacturerChoice> all=new ArrayList<>();
+        final Set<String> known=new HashSet<>();
+        for(VerifiedCableData.Cable cable:VerifiedCableData.all()){
+            String name=cable.brand;
+            if(known.add(name.toLowerCase(Locale.ROOT)))
+                all.add(new ManufacturerChoice(name,null,true));
+        }
+        for(ManufacturerCandidates.Record candidate:candidates){
+            if(known.add(candidate.name.toLowerCase(Locale.ROOT)))
+                all.add(new ManufacturerChoice(candidate.name,candidate.id,false));
+        }
+        Collections.sort(all,(x,y)->x.name.compareToIgnoreCase(y.name));
+        final List<ManufacturerChoice> visible=new ArrayList<>(all);
+        final LinearLayout sheet=col();
+        sheet.setPadding(d(16),d(8),d(16),d(4));
+        final EditText query=new EditText(this);
+        query.setSingleLine(true);
+        query.setTextSize(15);
+        query.setHint(t("manufacturerSearchHint"));
+        query.setInputType(android.text.InputType.TYPE_CLASS_TEXT);
+        query.setContentDescription(t("manufacturerSearchHint"));
+        sheet.addView(query,LibraryUi.lp(this,-1,50));
+        final TextView description=label(t("manufacturerListingNote"),12,0xff506479,false);
+        description.setPadding(d(3),d(6),d(3),d(8));
+        sheet.addView(description,LibraryUi.lp(this,-1,-2));
+        final ListView choices=new ListView(this);
+        choices.setCacheColorHint(Color.TRANSPARENT);
+        choices.setFastScrollEnabled(true);
+        choices.setDividerHeight(d(1));
+        sheet.addView(choices,LibraryUi.lp(this,-1,360));
+        final ArrayAdapter<String> adapter=new ArrayAdapter<>(this,
+            android.R.layout.simple_list_item_1,new ArrayList<String>());
+        choices.setAdapter(adapter);
+        Runnable redraw=()->{
+            visible.clear();
+            String text=query.getText().toString().trim().toLowerCase(Locale.ROOT);
+            for(ManufacturerChoice item:all)
+                if(text.isEmpty()||item.name.toLowerCase(Locale.ROOT).contains(text))
+                    visible.add(item);
+            adapter.clear();
+            adapter.add(t("all")+"  ("+all.size()+")");
+            for(ManufacturerChoice item:visible)adapter.add(item.name+"   ·   "+
+                t(item.withVerifiedProducts?"hasVerifiedCables":"pendingReviewOnly"));
+            adapter.notifyDataSetChanged();
+        };
+        query.addTextChangedListener(new TextWatcher(){
+            public void beforeTextChanged(CharSequence v,int start,int count,int after){}
+            public void onTextChanged(CharSequence v,int start,int before,int count){
+                redraw.run();
+            }
+            public void afterTextChanged(Editable v){}
+        });
+        AlertDialog dlg=new AlertDialog.Builder(this)
+            .setTitle(t("manufacturer")+" ("+all.size()+")")
+            .setView(sheet)
+            .setNegativeButton(t("cancel"),null)
+            .create();
+        choices.setOnItemClickListener((parent,view,position,id)->{
+            dlg.dismiss();
+            if(position==0){
+                brand="*";refreshDynamicSections();return;
+            }
+            final ManufacturerChoice selected=visible.get(position-1);
+            if(selected.withVerifiedProducts){
+                brand=selected.name;
+                refreshDynamicSections();
+            }else{
+                // Manufacturer research is explicitly not a product datasheet.
+                Intent intent=new Intent(this,ManufacturerDirectoryActivity.class);
+                intent.putExtra("focus_id",selected.recordId);
+                intent.putExtra("query",selected.name);
+                startActivity(intent);
+            }
+        });
+        redraw.run();
+        dlg.show();
     }
     private void refreshDynamicSections(){
         if(filters!=null){filters.removeAllViews();
