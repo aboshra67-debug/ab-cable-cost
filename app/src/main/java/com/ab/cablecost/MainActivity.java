@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -83,9 +84,23 @@ public class MainActivity extends Activity {
 
     @Override public void onCreate(Bundle saved){
         super.onCreate(saved);
-        getWindow().setStatusBarColor(NAVY);getWindow().setNavigationBarColor(NAVY);
-        getWindow().getDecorView().setSystemUiVisibility(0);
+        forceLightIcons();
         build();
+    }
+    private void forceLightIcons(){
+        getWindow().setStatusBarColor(NAVY);
+        getWindow().setNavigationBarColor(NAVY);
+        if(Build.VERSION.SDK_INT>=30 && getWindow().getInsetsController()!=null){
+            getWindow().getInsetsController().setSystemBarsAppearance(0,
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS|
+                WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+        }else{
+            getWindow().getDecorView().setSystemUiVisibility(0);
+        }
+    }
+    @Override public void onWindowFocusChanged(boolean focused){
+        super.onWindowFocusChanged(focused);
+        if(focused)forceLightIcons();
     }
     @Override protected void onResume(){
         super.onResume();
@@ -219,7 +234,7 @@ public class MainActivity extends Activity {
         feature.addView(copy,txtLp);
         TextView mark=txt("▣",29,GOLD,true);copy.addView(mark);
         TextView h=txt(tr("lib"),19,Color.WHITE,true);copy.addView(h);
-        TextView en=txt("Cable Library",12,0xffccd6e5,false);copy.addView(en);
+        TextView en=txt("Cable Library",12,0xffccd6e5,false);if(mode!=1)copy.addView(en);
         padSpace(copy,5);
         TextView blurb=txt(tr("libDesc"),11,Color.WHITE,false);
         blurb.setMaxLines(3);
@@ -233,10 +248,10 @@ public class MainActivity extends Activity {
         line.setLayoutDirection(rtl()?View.LAYOUT_DIRECTION_RTL:View.LAYOUT_DIRECTION_LTR);
         LinearLayout.LayoutParams rp=lp(-1,-2);rp.bottomMargin=d(11);
         page.addView(line,rp);
-        LinearLayout.LayoutParams first=new LinearLayout.LayoutParams(0,d(161),1);
+        LinearLayout.LayoutParams first=new LinearLayout.LayoutParams(0,d(173),1);
         first.rightMargin=d(5);first.leftMargin=d(3);
         line.addView(card(a),first);
-        LinearLayout.LayoutParams second=new LinearLayout.LayoutParams(0,d(161),1);
+        LinearLayout.LayoutParams second=new LinearLayout.LayoutParams(0,d(173),1);
         second.leftMargin=d(3);second.rightMargin=d(5);
         line.addView(card(b),second);
     }
@@ -267,7 +282,7 @@ public class MainActivity extends Activity {
         TextView sub=txt(EN[id],10,0xff425b77,false);
         sub.setTextDirection(View.TEXT_DIRECTION_LTR);
         sub.setMaxLines(1);sub.setEllipsize(TextUtils.TruncateAt.END);
-        texts.addView(sub);
+        if(mode!=1)texts.addView(sub);
         TextView desc=txt(tr(IDS[id]+"Desc"),10,SUB,false);
         desc.setMaxLines(2);desc.setEllipsize(TextUtils.TruncateAt.END);
         texts.addView(desc);
