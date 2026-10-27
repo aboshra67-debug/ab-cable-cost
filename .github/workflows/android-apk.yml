@@ -35,6 +35,7 @@ jobs:
         shell: bash
         run: |
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --min-sdk-version 36 --verbose app/build/outputs/apk/debug/app-debug.apk
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging app/build/outputs/apk/debug/app-debug.apk | head -20
           sha256sum app/build/outputs/apk/debug/app-debug.apk
       - name: Publish build artifact
@@ -102,3 +103,32 @@ jobs:
             screenshots/manufacturer_selected_profile.png
             screenshots/*.xml
           if-no-files-found: warn
+
+  android16-install:
+    needs: build-apk
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: AB-Cable-Cost-V0.5.3-Debug-APK
+          path: artifact
+      - name: Configure KVM
+        run: |
+          if test -e /dev/kvm; then sudo chmod 666 /dev/kvm; fi
+      - name: Install APK and launch on Android 16 (API 36)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: |
+            test -s artifact/app-debug.apk
+            adb install -r artifact/app-debug.apk
+            adb shell pm path com.ab.cablecost
+            adb shell am start -W -n com.ab.cablecost/.MainActivity
+            sleep 3
+            adb shell pidof com.ab.cablecost
