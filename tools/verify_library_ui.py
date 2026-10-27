@@ -85,4 +85,22 @@ tap(english)
 tree,cable_en=wait("Search results","library_en.xml")
 assert node(tree,"Verified models so far") is not None
 screen("global_library_en.png")
-print("PASS: UI launched, verified product search, Belden detail + 3D tab, AR/EN and real screenshots")
+
+# Imported manufacturer RESEARCH index stays separate from the verified cable list.
+adb("shell","input","swipe","495","1510","495","720","340")
+tree,directory=wait("Company directory","company_directory_link.xml",tries=6)
+tap(directory)
+tree,company=wait("Hengtong Group","manufacturers_all.xml")
+assert node(tree,"150") is not None or node(tree,"150 / 150") is not None
+assert node(tree,"Pending review") is not None
+screen("manufacturer_candidates_en.png")
+
+tree,brands=wait("Separate brands","manufacturer_tabs.xml")
+tap(brands)
+tree,entry=wait("Premium-Line","brands.xml")
+assert node(tree,"9 / 9") is not None
+screen("separate_brands_en.png")
+adb("shell","input","keyevent","4")
+tree,return_to_library=wait("Search results","library_return.xml")
+
+print("PASS: Android UI; verified cables preserved; 150 pending company candidates, separate 9 brands, bilingual search/detail/3D")
