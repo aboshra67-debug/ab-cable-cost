@@ -3,6 +3,10 @@ package com.ab.cablecost;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -13,6 +17,7 @@ import android.view.View;
 public class CableVisual extends View {
     private final Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);
     private final int kind;
+    private static Bitmap photoStrip;
     private final int navy=Color.rgb(16,34,56), gold=Color.rgb(215,164,75), copper=Color.rgb(207,114,45);
     public CableVisual(Context context,int kind){super(context);this.kind=kind;setLayerType(View.LAYER_TYPE_SOFTWARE,null);}
     private void fill(int color){p.reset();p.setAntiAlias(true);p.setColor(color);p.setStyle(Paint.Style.FILL);}
@@ -28,6 +33,20 @@ public class CableVisual extends View {
         super.onDraw(raw);
         int save=raw.save();float w=getWidth(),h=getHeight();
         raw.scale(w/160f,h/110f);Canvas c=raw;
+        // Product pictures are crops of the previously approved design, embedded
+        // locally and never presented as technical datasheet evidence.
+        if(kind>=1&&kind<=4){
+            if(photoStrip==null)photoStrip=BitmapFactory.decodeResource(
+                getResources(),R.drawable.ab_product_mini);
+            if(photoStrip!=null){
+                p.reset();p.setAntiAlias(true);p.setFilterBitmap(true);
+                int cell=photoStrip.getWidth()/4;
+                Rect src=new Rect((kind-1)*cell,0,kind*cell,photoStrip.getHeight());
+                RectF dst=new RectF(4,4,156,106);
+                c.drawBitmap(photoStrip,src,dst,p);
+                raw.restoreToCount(save);return;
+            }
+        }
         if(kind==2){ // coax camera RG cable with inner copper and shield
             fill(0xff111d2c);c.drawRoundRect(15,27,149,94,28,28,p);
             fill(0xff8d9daf);c.drawRoundRect(30,35,119,83,22,22,p);
