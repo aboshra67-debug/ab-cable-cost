@@ -86,8 +86,8 @@ tree,cable_en=wait("Search results","library_en.xml")
 assert node(tree,"Verified models so far") is not None
 screen("global_library_en.png")
 
-# Imported manufacturer RESEARCH index stays separate from the verified cable list.
-adb("shell","input","swipe","495","1510","495","720","340")
+# Company directory is now visible at the TOP of the cable library,
+# rather than hidden below filter chips and categories.
 tree,directory=wait("Company directory","company_directory_link.xml",tries=6)
 tap(directory)
 tree,company=wait("Hengtong Group","manufacturers_all.xml")
@@ -103,4 +103,12 @@ screen("separate_brands_en.png")
 adb("shell","input","keyevent","4")
 tree,return_to_library=wait("Search results","library_return.xml")
 
-print("PASS: Android UI; verified cables preserved; 150 pending company candidates, separate 9 brands, bilingual search/detail/3D")
+# One search bar must now find a company name without opening a hidden menu.
+tree,searchfield=wait("Search by maker","library_search_query.xml")
+tap(searchfield)
+adb("shell","input","text","Hengtong")
+tree,company_hit=wait("Matching companies","library_company_search.xml")
+assert node(tree,"Hengtong Group") is not None
+assert node(tree,"1 / 3") is not None or node(tree,"0 / 3") is not None or node(tree,"3") is not None
+screen("company_search_in_library.png")
+print("PASS: companies discoverable in main library, 150 candidate directory, separate 9 brands, sourced cables preserved, bilingual details/3D")
