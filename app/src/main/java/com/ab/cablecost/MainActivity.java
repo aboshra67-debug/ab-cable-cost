@@ -284,6 +284,12 @@ public class MainActivity extends Activity {
         }
     }
     private void openCatalog(String family,String spec){
+        // The reference LIBRARY is now a separate sourced module; the existing
+        // manufacturing/price workbook remains in CatalogActivity unchanged.
+        if(family==null && spec==null){
+            startActivity(new Intent(this,LibraryActivity.class));
+            return;
+        }
         Intent i=new Intent(this,CatalogActivity.class);
         if(family!=null)i.putExtra("family",family);
         if(spec!=null)i.putExtra("specId",spec);
@@ -352,31 +358,11 @@ public class MainActivity extends Activity {
             }).setNegativeButton(tr("cancel"),null).show();
     }
     private void searchCatalog(){
-        String q=queryInput.getText().toString().trim().toLowerCase(Locale.ROOT);
-        if(q.isEmpty()){
-            openCatalog(null,null);return;
-        }
-        List<CableCatalog.Spec> found=new ArrayList<>();
-        for(CableCatalog.Spec s:CableCatalog.all()){
-            String content=(s.model+" "+s.family+" "+s.manufacturer+" "+s.standard+
-                " "+s.note).toLowerCase(Locale.ROOT);
-            if(content.contains(q))found.add(s);
-        }
-        if(found.isEmpty()){
-            new AlertDialog.Builder(this).setTitle(tr("results"))
-                .setMessage(tr("noResults")).setPositiveButton("OK",null).show();
-            return;
-        }
-        int limit=Math.min(25,found.size());
-        String[] items=new String[limit];
-        for(int x=0;x<limit;x++){
-            CableCatalog.Spec s=found.get(x);
-            items[x]=s.model+" • "+s.manufacturer+" • "+s.family;
-        }
-        new AlertDialog.Builder(this).setTitle(tr("results")+" ("+found.size()+")")
-            .setItems(items,(dlg,idx)->{
-                CableCatalog.Spec s=found.get(idx);
-                openCatalog(s.family,s.id);
-            }).setNegativeButton(tr("cancel"),null).show();
+        // Search across OFFICIALLY-SOURCED technical cable records rather than
+        // treating internal editable recipes as manufacturer certifications.
+        Intent i=new Intent(this,LibraryActivity.class);
+        String query=queryInput==null?"":queryInput.getText().toString().trim();
+        if(!query.isEmpty())i.putExtra("query",query);
+        startActivity(i);
     }
 }
