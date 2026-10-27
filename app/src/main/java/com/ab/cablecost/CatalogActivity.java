@@ -21,6 +21,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,6 +44,7 @@ public class CatalogActivity extends Activity {
     SharedPreferences pref;
     LinearLayout root, page, body;
     Spinner family, maker, model;
+    LinearLayout sizeCards;
     CableCatalog.Spec selected;
     final List<CableCatalog.Spec> matches=new ArrayList<>();
     final List<Row> rows=new ArrayList<>();
@@ -151,14 +155,27 @@ public class CatalogActivity extends Activity {
             });
             root.requestApplyInsets();
         }
-        LinearLayout top=vertical();top.setPadding(dp(16),dp(18),dp(16),dp(16));
+        LinearLayout top=new LinearLayout(this);
+        top.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        top.setPadding(dp(14),dp(12),dp(14),dp(13));
+        top.setGravity(Gravity.CENTER_VERTICAL);
         top.setBackgroundColor(NAVY);root.addView(top);
-        top.addView(text("AB Cable Cost  •  دليل الكابلات",21,GOLD,true));
-        gap(top,4);
-        top.addView(text("مرجع فني + وصفة تصنيع قابلة للتعديل",13,Color.WHITE,false));
+        LinearLayout title=vertical();
+        top.addView(title,new LinearLayout.LayoutParams(0,-2,1));
+        title.addView(text("AB Cable Cost",21,Color.WHITE,true));
+        title.addView(text("المقاسات ووصفات التصنيع",13,GOLD,false));
+        ImageView logo=new ImageView(this);
+        logo.setImageResource(R.drawable.ab_brand_logo);
+        logo.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        logo.setContentDescription("شعار AB Cable Cost الأصلي");
+        top.addView(logo,new LinearLayout.LayoutParams(dp(85),dp(65)));
+
         ScrollView scroll=new ScrollView(this);scroll.setBackgroundColor(PAGE);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
         body=vertical();body.setPadding(dp(13),dp(16),dp(13),dp(24));scroll.addView(body);
-        showCatalog();
+        String screen=getIntent().getStringExtra("screen");
+        if("prices".equals(screen))showPrices();
+        else if("settings".equals(screen))showSettings();
+        else showCatalog();
     }
     void showCatalog(){
         body.removeAllViews();rows.clear();
@@ -169,7 +186,9 @@ public class CatalogActivity extends Activity {
         LinearLayout filters=card("اختار الكابل والمقاس");
         label(filters,"نوع الكابل");
         family=spinner(filters,CableCatalog.THERMO,CableCatalog.CAMERA,
-            CableCatalog.FIRE,CableCatalog.SHIELD);
+            CableCatalog.FIRE,CableCatalog.SHIELD,
+            CableCatalog.ARMORED,CableCatalog.CONTROL,
+            CableCatalog.INSULATED,CableCatalog.SPECIAL);
         gap(filters,10);label(filters,"الشركة المرجعية");
         maker=spinner(filters,"كل الشركات","السويدي","Belden","قالب قابل للتعديل");
         gap(filters,10);label(filters,"المقاس / الموديل");
@@ -177,7 +196,17 @@ public class CatalogActivity extends Activity {
         family.setOnItemSelectedListener(onSelect(()->refreshModels()));
         maker.setOnItemSelectedListener(onSelect(()->refreshModels()));
         model.setOnItemSelectedListener(onSelect(()->renderSpec()));
+        sizeCards=vertical();
+        body.addView(sizeCards);
         page=vertical();body.addView(page);
+        String presetFamily=getIntent().getStringExtra("family");
+        if(presetFamily!=null){
+            for(int i=0;i<family.getCount();i++){
+                if(presetFamily.equals(String.valueOf(family.getItemAtPosition(i)))){
+                    family.setSelection(i);break;
+                }
+            }
+        }
         refreshModels();
     }
     AdapterView.OnItemSelectedListener onSelect(Runnable call) {
@@ -200,8 +229,51 @@ public class CatalogActivity extends Activity {
             @Override public View getDropDownView(int i,View v,ViewGroup p){return choice(getItem(i));}
         };
         model.setAdapter(adapter);
+        showSizeCards();
         renderSpec();
     }
+    private void showSizeCards(){
+        if(sizeCards==null)return;
+        sizeCards.removeAllViews();
+        if(matches.isEmpty())return;
+        LinearLayout wrapper=vertical();
+        wrapper.setPadding(dp(14),dp(10),dp(14),dp(13));
+        wrapper.setBackground(bg(Color.WHITE,15,BORDER));
+        LinearLayout.LayoutParams wrapLp=new LinearLayout.LayoutParams(-1,-2);
+        wrapLp.bottomMargin=dp(13);
+        sizeCards.addView(wrapper,wrapLp);
+        wrapper.addView(text("المقاسات المتاحة",19,INK,true));
+        gap(wrapper,4);
+        wrapper.addView(text("اضغط على أي مقاس أو استخدم قائمة المقاسات لعرض الباقي",12,MUTED,false));
+        gap(wrapper,11);
+        int show=Math.min(matches.size(),10);
+        for(int start=0;start<show;start+=2){
+            LinearLayout row=new LinearLayout(this);
+            row.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);
+            lp.bottomMargin=dp(8);wrapper.addView(row,lp);
+            for(int j=start;j<Math.min(show,start+2);j++){
+                final int position=j;
+                CableCatalog.Spec item=matches.get(j);
+                LinearLayout tile=vertical();
+                tile.setPadding(dp(9),dp(8),dp(9),dp(9));
+                tile.setBackground(bg(0xfff7f9fc,12,BORDER));
+                LinearLayout.LayoutParams tileLp=new LinearLayout.LayoutParams(0,dp(74),1);
+                if((j%2)==0)tileLp.leftMargin=dp(7);
+                row.addView(tile,tileLp);
+                TextView name=text(item.model,14,INK,true);
+                name.setMaxLines(1);tile.addView(name);
+                gap(tile,3);
+                tile.addView(text(item.manufacturer,11,MUTED,false));
+                tile.setOnClickListener(v->model.setSelection(position));
+            }
+        }
+        if(matches.size()>10){
+            wrapper.addView(text("وفيه "+(matches.size()-10)+
+                " مقاسات تانية في القائمة اللي فوق.",12,MUTED,false));
+        }
+    }
+
     void line(LinearLayout box,String title,String value){
         TextView t=text(title+"  "+value,14,INK,false);
         LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.bottomMargin=dp(5);
@@ -220,6 +292,15 @@ public class CatalogActivity extends Activity {
         source.setBackground(bg(Color.WHITE,15,BORDER));
         LinearLayout.LayoutParams sp=new LinearLayout.LayoutParams(-1,-2);sp.bottomMargin=dp(13);
         page.addView(source,sp);
+        int drawing=1;
+        if(selected.family.equals(CableCatalog.CAMERA)) drawing=2;
+        else if(selected.family.equals(CableCatalog.FIRE)) drawing=3;
+        else if(selected.family.equals(CableCatalog.SHIELD)) drawing=4;
+        else if(selected.family.equals(CableCatalog.ARMORED)) drawing=5;
+        CableVisual visual=new CableVisual(this,drawing);
+        visual.setBackground(bg(0xffe8eef4,12,Color.TRANSPARENT));
+        source.addView(visual,new LinearLayout.LayoutParams(-1,dp(111)));
+        gap(source,9);
         source.addView(text("بيانات المواصفة",19,INK,true));
         gap(source,9);
         line(source,"الشركة:",selected.manufacturer);
