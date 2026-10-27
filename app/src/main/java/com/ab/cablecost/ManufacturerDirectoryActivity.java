@@ -70,6 +70,8 @@ public final class ManufacturerDirectoryActivity extends Activity {
         super.onCreate(state);
         getWindow().setStatusBarColor(NAVY);
         getWindow().setNavigationBarColor(NAVY);
+        String initialQuery=getIntent().getStringExtra("query");
+        if(initialQuery!=null)lastQuery=initialQuery.trim();
         try{
             companies.addAll(ManufacturerCandidates.all(this));
             readBrands();
