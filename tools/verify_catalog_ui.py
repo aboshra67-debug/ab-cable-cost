@@ -35,6 +35,16 @@ def find(root, term, attr="text"):
 def wait_for(term, filename, attr="text", tries=8):
     for _ in range(tries):
         tree=dump(filename)
+        # Fresh Google API emulator may show a Pixel Launcher ANR dialog even
+        # when our app's Activity has started and its process is healthy.
+        if find(tree,"Pixel Launcher isn't responding") is not None:
+            close=find(tree,"Close app")
+            if close is not None:
+                tap(close)
+                time.sleep(2)
+                adb("shell","am","start","-n","com.ab.cablecost/.MainActivity")
+                time.sleep(2)
+                continue
         node=find(tree,term,attr)
         if node is not None:
             return tree,node
