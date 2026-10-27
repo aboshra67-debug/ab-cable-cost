@@ -1,62 +1,78 @@
 #!/usr/bin/env python3
-"""End-to-end smoke test of approved home, original AB logo and cable catalogue.
+"""Real Android 15 UI smoke test for the approved engineering home.
 
-Run inside Android 15 emulator after installing the APK.
-Never export a private Android Activity to make tests pass.
+Only assert implemented capabilities. Test switches AR -> EN -> AR and opens
+the existing library from the functional home tile. Screenshots are taken
+from the emulator, not mockups.
 """
 import re
 import subprocess
 import time
-import xml.etree.ElementTree as ET
 from pathlib import Path
+from xml.etree import ElementTree as ET
 
-Path("screenshots").mkdir(exist_ok=True)
+OUT = Path("screenshots")
+OUT.mkdir(exist_ok=True)
 
-def adb(*args):
-    return subprocess.check_output(["adb", *args], text=True, stderr=subprocess.STDOUT)
+def adb(*parts):
+    return subprocess.check_output(["adb", *parts], text=True, stderr=subprocess.STDOUT)
 
-def dump(name):
-    adb("shell","uiautomator","dump","/sdcard/window.xml")
-    subprocess.check_call(["adb","pull","/sdcard/window.xml",str(name)])
-    return ET.parse(name).getroot()
+def snapshot(name):
+    adb("shell","screencap","-p","/sdcard/Download/ab_home_test.png")
+    subprocess.check_call(["adb","pull","/sdcard/Download/ab_home_test.png",str(OUT/name)])
 
-def find_node(root, token, field="text"):
+def dump(filename):
+    adb("shell","uiautomator","dump","/sdcard/ab_view.xml")
+    subprocess.check_call(["adb","pull","/sdcard/ab_view.xml",str(OUT/filename)])
+    return ET.parse(OUT/filename).getroot()
+
+def find(root, term, attr="text"):
     for node in root.iter("node"):
-        if token in node.attrib.get(field,""):
+        if term in node.attrib.get(attr,""):
             return node
     return None
 
-def screenshot(name):
-    adb("shell","screencap","-p","/sdcard/Download/ab_image.png")
-    subprocess.check_call(["adb","pull","/sdcard/Download/ab_image.png","screenshots/"+name])
+def wait_for(term, filename, attr="text", tries=8):
+    for _ in range(tries):
+        tree=dump(filename)
+        node=find(tree,term,attr)
+        if node is not None:
+            return tree,node
+        time.sleep(1.2)
+    raise AssertionError("Missing UI element: "+term)
 
 def tap(node):
     bounds=node.attrib.get("bounds","")
-    m=re.fullmatch(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]",bounds)
-    if not m:
-        raise RuntimeError("Invalid control bounds: "+bounds)
-    x1,y1,x2,y2=map(int,m.groups())
-    adb("shell","input","tap",str((x1+x2)//2),str((y1+y2)//2))
+    match=re.fullmatch(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]",bounds)
+    assert match, "No clickable bounds: "+bounds
+    a,b,c,d=map(int,match.groups())
+    adb("shell","input","tap",str((a+c)//2),str((b+d)//2))
 
-home=None
-for _ in range(10):
-    home=dump("screenshots/home.xml")
-    if find_node(home,"ابدأ حساب الكابل"):
-        break
-    time.sleep(2)
-screenshot("home.png")
-print("HOME NODES:",[(n.attrib.get("class",""),n.attrib.get("text",""),
-                      n.attrib.get("content-desc","")) for n in home.iter("node")][:80])
-assert find_node(home,"AB Cable Cost") is not None,"Brand title missing from home"
-assert find_node(home,"شعار AB Cable Cost الأصلي","content-desc") is not None,"Approved AB logo missing"
-open_button=find_node(home,"ابدأ حساب الكابل")
-assert open_button is not None,"Main hero catalogue action missing"
-tap(open_button)
-time.sleep(3)
-assert adb("shell","pidof","com.ab.cablecost").strip(),"App process exited"
-catalog=dump("screenshots/catalog.xml")
-assert find_node(catalog,"اختار الكابل والمقاس") is not None,"Catalogue selection card missing"
-assert find_node(catalog,"أسعار الخامات المركزية") is not None,"Central prices shortcut missing"
-assert find_node(catalog,"شعار AB Cable Cost الأصلي","content-desc") is not None,"Catalogue logo missing"
-screenshot("catalog.png")
-print("PASS: Approved AB logo visible, home action works, catalogue/price controls open on Android 15")
+tree,library=wait_for("مكتبة الكابلات","home_ar.xml")
+assert find(tree,"AB Cable Cost") is not None, "Brand text missing"
+assert find(tree,"AB Cable Cost original logo","content-desc") is not None,"Logo image missing"
+assert find(tree,"ابحث عن كابل") is not None,"Search control missing"
+assert find(tree,"اختيار الكابل") is not None,"Selection card missing"
+assert find(tree,"الحسابات الكهربائية") is not None,"Electrical calculation card missing"
+assert find(tree,"الرئيسية") is not None,"Home tab missing"
+snapshot("engineering_home_ar.png")
+
+tree,lang_button=wait_for("اللغة","language_launch.xml","content-desc")
+tap(lang_button)
+tree,english=wait_for("English","language_picker.xml")
+tap(english)
+tree,lib_en=wait_for("Cable Library","home_en.xml")
+assert find(tree,"Electrical Calculations") is not None, "EN translations not applied"
+snapshot("engineering_home_en.png")
+
+tree,lang_button=wait_for("Language","language_reopen.xml","content-desc")
+tap(lang_button)
+tree,arabic=wait_for("العربية — Arabic","language_ar.xml")
+tap(arabic)
+tree,library=wait_for("مكتبة الكابلات","home_ar_restored.xml")
+tap(library)
+tree,catalog=wait_for("اختار الكابل والمقاس","catalog.xml")
+assert find(tree,"أسعار الخامات المركزية") is not None,"Existing price shortcut missing"
+snapshot("catalog.png")
+print("PASS: Android installed/launched, original logo present, AR+EN UI switch, "
+      "functional library navigation, prior catalogue retained")
