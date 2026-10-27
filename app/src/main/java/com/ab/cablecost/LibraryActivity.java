@@ -101,6 +101,9 @@ public class LibraryActivity extends Activity {
         searchBox();
         filterChips();
         categoryCards();
+        // Dedicated research directory: never merge company candidates with
+        // manufacturer-sourced technical product records in VerifiedCableData.
+        candidateDirectoryEntry();
         LinearLayout heading=row();
         LinearLayout.LayoutParams hp=LibraryUi.lp(this,-1,44);hp.topMargin=d(10);
         content.addView(heading,hp);
@@ -235,6 +238,22 @@ public class LibraryActivity extends Activity {
         if(types!=null)populateCategories();
         updateResults();
     }
+    private void candidateDirectoryEntry(){
+        LinearLayout block=col();
+        block.setPadding(d(13),d(9),d(13),d(9));
+        block.setBackground(LibraryUi.bg(this,LibraryUi.MID,13,LibraryUi.BORDER));
+        LinearLayout.LayoutParams bp=LibraryUi.lp(this,-1,-2);
+        bp.topMargin=d(7);bp.bottomMargin=d(4);
+        content.addView(block,bp);
+        TextView title=label("◎ "+t("manufacturerDirectory")+"  ›",15,GOLD,true);
+        block.addView(title);
+        TextView details=label(t("companiesSubhead"),11,LibraryUi.MUTED,false);
+        details.setPadding(0,d(4),0,0);
+        block.addView(details);
+        LibraryUi.tappable(block,t("manufacturerDirectory"),
+            ()->startActivity(new Intent(this,ManufacturerDirectoryActivity.class)));
+    }
+
     private void categoryCards(){
         HorizontalScrollView sc=new HorizontalScrollView(this);
         sc.setHorizontalScrollBarEnabled(false);
