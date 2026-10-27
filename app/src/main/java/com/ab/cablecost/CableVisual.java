@@ -18,6 +18,7 @@ public class CableVisual extends View {
     private final Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);
     private final int kind;
     private static Bitmap photoStrip;
+    private static Bitmap referenceArtwork;
     private final int navy=Color.rgb(16,34,56), gold=Color.rgb(215,164,75), copper=Color.rgb(207,114,45);
     public CableVisual(Context context,int kind){super(context);this.kind=kind;setLayerType(View.LAYER_TYPE_SOFTWARE,null);}
     private void fill(int color){p.reset();p.setAntiAlias(true);p.setColor(color);p.setStyle(Paint.Style.FILL);}
@@ -33,6 +34,23 @@ public class CableVisual extends View {
         super.onDraw(raw);
         int save=raw.save();float w=getWidth(),h=getHeight();
         raw.scale(w/160f,h/110f);Canvas c=raw;
+        if(kind>=10 && kind<=16) {
+            // Seven photo slices extracted from the user's approved static
+            // home mockup. These are artwork, not manufacturer datasheets.
+            if(referenceArtwork==null) {
+                referenceArtwork=BitmapFactory.decodeResource(
+                    getResources(),R.drawable.ab_home_art);
+            }
+            if(referenceArtwork!=null) {
+                int cell=referenceArtwork.getWidth()/7;
+                int idx=kind-10;
+                Rect src=new Rect(idx*cell,0,(idx+1)*cell,referenceArtwork.getHeight());
+                p.reset();p.setAntiAlias(true);p.setFilterBitmap(true);
+                c.drawBitmap(referenceArtwork,src,new RectF(0,0,160,110),p);
+                raw.restoreToCount(save);
+                return;
+            }
+        }
         // Product pictures are crops of the previously approved design, embedded
         // locally and never presented as technical datasheet evidence.
         if(kind>=1&&kind<=4){
