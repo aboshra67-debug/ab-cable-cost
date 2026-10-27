@@ -3,6 +3,8 @@ package com.ab.cablecost;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.os.Build;
+import android.view.WindowInsets;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -133,13 +135,28 @@ public class CatalogActivity extends Activity {
     @Override public void onCreate(Bundle state){
         super.onCreate(state);pref=getSharedPreferences("ab_cable_cost_catalog_v1",MODE_PRIVATE);
         getWindow().setStatusBarColor(NAVY);getWindow().setNavigationBarColor(NAVY);
-        root=vertical();root.setBackgroundColor(PAGE);setContentView(root);
+        root=vertical();root.setBackgroundColor(NAVY);setContentView(root);
+        if(Build.VERSION.SDK_INT>=21){
+            root.setOnApplyWindowInsetsListener((view,insets)->{
+                int topInset,bottomInset;
+                if(Build.VERSION.SDK_INT>=30){
+                    topInset=insets.getInsets(WindowInsets.Type.statusBars()).top;
+                    bottomInset=insets.getInsets(WindowInsets.Type.navigationBars()).bottom;
+                }else{
+                    topInset=insets.getSystemWindowInsetTop();
+                    bottomInset=insets.getSystemWindowInsetBottom();
+                }
+                root.setPadding(0,topInset,0,bottomInset);
+                return insets;
+            });
+            root.requestApplyInsets();
+        }
         LinearLayout top=vertical();top.setPadding(dp(16),dp(18),dp(16),dp(16));
         top.setBackgroundColor(NAVY);root.addView(top);
         top.addView(text("AB Cable Cost  •  دليل الكابلات",21,GOLD,true));
         gap(top,4);
         top.addView(text("مرجع فني + وصفة تصنيع قابلة للتعديل",13,Color.WHITE,false));
-        ScrollView scroll=new ScrollView(this);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
+        ScrollView scroll=new ScrollView(this);scroll.setBackgroundColor(PAGE);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
         body=vertical();body.setPadding(dp(13),dp(16),dp(13),dp(24));scroll.addView(body);
         showCatalog();
     }
