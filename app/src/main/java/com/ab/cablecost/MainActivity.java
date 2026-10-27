@@ -101,6 +101,7 @@ public class MainActivity extends Activity {
     private ImageView logo(int width,int height){
         ImageView image=new ImageView(this);
         image.setImageResource(R.drawable.ab_brand_logo);
+        image.setContentDescription("شعار AB Cable Cost الأصلي");
         image.setScaleType(ImageView.ScaleType.FIT_CENTER);
         image.setPadding(px(3),px(3),px(3),px(3));
         image.setLayoutParams(new LinearLayout.LayoutParams(px(width),px(height)));
