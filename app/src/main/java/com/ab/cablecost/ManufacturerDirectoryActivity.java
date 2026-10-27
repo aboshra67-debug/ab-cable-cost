@@ -82,6 +82,18 @@ public final class ManufacturerDirectoryActivity extends Activity {
             return;
         }
         render();
+        // A pending manufacturer selected in the global library's Company
+        // filter should open its actual review card, not an empty cable list.
+        String focusId=getIntent().getStringExtra("focus_id");
+        if(focusId!=null){
+            for(ManufacturerCandidates.Record entry:companies){
+                if(entry.id.equals(focusId)){
+                    final ManufacturerCandidates.Record match=entry;
+                    root.post(()->openCompany(match));
+                    break;
+                }
+            }
+        }
     }
     @Override protected void onResume(){
         super.onResume();
