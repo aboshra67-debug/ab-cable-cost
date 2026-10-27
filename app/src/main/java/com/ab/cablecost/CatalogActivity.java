@@ -298,7 +298,7 @@ public class CatalogActivity extends Activity {
                         message("الخامة دي موجودة في الوصفة بالفعل.");
                         return;
                     }
-                    pref.edit().putString(key("extraMaterials"),original+name+"\\n").apply();
+                    pref.edit().putString(key("extraMaterials"),original+name+"\n").apply();
                     renderSpec();
                 })
                 .setNegativeButton("إلغاء",null).show();
