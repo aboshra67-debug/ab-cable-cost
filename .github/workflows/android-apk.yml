@@ -30,31 +30,48 @@ jobs:
       - name: Verify all 150 imported candidates and separate brands
         run: python3 tools/verify_import_data.py
       - name: Build APK
-        run: gradle :app:assembleDebug --no-daemon --stacktrace
+        run: gradle :app:assembleDebug :app:assembleParallel --no-daemon --stacktrace
       - name: Verify APK signature and Android package
         shell: bash
         run: |
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs app/build/outputs/apk/debug/app-debug.apk
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --min-sdk-version 36 --verbose app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs app/build/outputs/apk/parallel/app-parallel.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --min-sdk-version 36 --verbose app/build/outputs/apk/parallel/app-parallel.apk
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging app/build/outputs/apk/parallel/app-parallel.apk | head -16
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging app/build/outputs/apk/debug/app-debug.apk | head -20
           sha256sum app/build/outputs/apk/debug/app-debug.apk
       - name: Publish build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.5.3-Debug-APK
+          name: AB-Cable-Cost-V0.5.4-Debug-APK
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+      - name: Publish separate safe-install APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AB-Cable-Cost-V0.5.4-Parallel-APK
+          path: app/build/outputs/apk/parallel/*.apk
+          if-no-files-found: error
+      - name: Publish Android signing tools for offline stable signing
+        uses: actions/upload-artifact@v4
+        with:
+          name: AB-Cable-Cost-Android-ApkSigner-Tools
+          path: |
+            ${{ env.ANDROID_HOME }}/build-tools/35.0.0/lib/apksigner.jar
+            ${{ env.ANDROID_HOME }}/build-tools/35.0.0/zipalign
+          if-no-files-found: warn
       - name: Prepare Safe Source archive
         shell: bash
         run: |
-          zip -rq AB_CABLE_COST_V0_5_3_SAFE_SOURCE.zip . \
-            -x '.git/*' '.gradle/*' '*/build/*' 'screenshots/*' 'AB_CABLE_COST_V0_5_3_SAFE_SOURCE.zip'
-          unzip -t AB_CABLE_COST_V0_5_3_SAFE_SOURCE.zip | tail -2
+          zip -rq AB_CABLE_COST_V0_5_4_SAFE_SOURCE.zip . \
+            -x '.git/*' '.gradle/*' '*/build/*' 'screenshots/*' 'AB_CABLE_COST_V0_5_4_SAFE_SOURCE.zip'
+          unzip -t AB_CABLE_COST_V0_5_4_SAFE_SOURCE.zip | tail -2
       - name: Publish Safe Source
         uses: actions/upload-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.5.3-Safe-Source
-          path: AB_CABLE_COST_V0_5_3_SAFE_SOURCE.zip
+          name: AB-Cable-Cost-V0.5.4-Safe-Source
+          path: AB_CABLE_COST_V0_5_4_SAFE_SOURCE.zip
           if-no-files-found: error
 
   emulator-smoke:
@@ -65,7 +82,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.5.3-Debug-APK
+          name: AB-Cable-Cost-V0.5.4-Debug-APK
           path: artifact
       - name: Configure KVM
         run: |
@@ -88,7 +105,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.5.3-UI-Preview
+          name: AB-Cable-Cost-V0.5.4-UI-Preview
           path: |
             screenshots/home.png
             screenshots/global_library_ar.png
@@ -112,8 +129,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.5.3-Debug-APK
+          name: AB-Cable-Cost-V0.5.4-Debug-APK
           path: artifact
+      - name: Download parallel install APK
+        uses: actions/download-artifact@v4
+        with:
+          name: AB-Cable-Cost-V0.5.4-Parallel-APK
+          path: safe
       - name: Configure KVM
         run: |
           if test -e /dev/kvm; then sudo chmod 666 /dev/kvm; fi
@@ -132,3 +154,11 @@ jobs:
             adb shell am start -W -n com.ab.cablecost/.MainActivity
             sleep 3
             adb shell pidof com.ab.cablecost
+            echo "Installing side-by-side package with a DIFFERENT app ID"
+            adb install safe/app-parallel.apk
+            adb shell pm path com.ab.cablecost.safe
+            adb shell am start -W -n com.ab.cablecost.safe/com.ab.cablecost.MainActivity
+            sleep 3
+            adb shell pidof com.ab.cablecost.safe
+            adb shell pm path com.ab.cablecost
+            echo "PASS Android 16: both original and safe-install apps co-exist"
