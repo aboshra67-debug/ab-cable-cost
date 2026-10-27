@@ -48,9 +48,30 @@ jobs:
             adb shell am start -W -n com.ab.cablecost/.MainActivity
             sleep 3
             adb shell pidof com.ab.cablecost
+            mkdir -p screenshots
+            adb shell screencap -p /sdcard/Download/ab_cable_ui.png
+            adb pull /sdcard/Download/ab_cable_ui.png screenshots/home.png
       - name: Upload APK after installation test
         uses: actions/upload-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.1.1-Verified-APK
+          name: AB-Cable-Cost-V0.1.2-Verified-APK
           path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Create reproducible Safe Source ZIP
+        shell: bash
+        run: |
+          zip -rq AB_CABLE_COST_V0_1_2_UI_SAFE_SOURCE.zip . -x '.git/*' '.gradle/*' '*/build/*' 'screenshots/*' 'AB_CABLE_COST_V0_1_2_UI_SAFE_SOURCE.zip'
+          unzip -t AB_CABLE_COST_V0_1_2_UI_SAFE_SOURCE.zip | tail -2
+      - name: Upload Safe Source ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: AB-Cable-Cost-V0.1.2-Safe-Source
+          path: AB_CABLE_COST_V0_1_2_UI_SAFE_SOURCE.zip
+          if-no-files-found: error
+      - name: Upload emulator screenshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: AB-Cable-Cost-V0.1.2-UI-Preview
+          path: screenshots/home.png
           if-no-files-found: error
