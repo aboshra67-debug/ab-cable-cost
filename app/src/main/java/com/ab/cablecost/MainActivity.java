@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
     private static final String[] IDS={"sel","calc","res","protect","manufacture","install"};
     private static final String[] EN={"Cable Selection","Electrical Calculations","Cable Resistance",
             "Cable Protection","Manufacturing Cost","Installation & Testing"};
-    private static final int[] ART={1,1,1,3,1,2};
+    private static final int[] ART={11,12,13,14,15,16};
     private static final String[] SYMBOL={"⌖","▦","Ω","♢","▥","⚒"};
     private static final int[] TINT={0xfffff6e6,0xffecf4fe,0xfff7f3ea,0xffffeeec,0xfffff5df,0xffeaf3fd};
     private LinearLayout root, page;
@@ -207,7 +207,7 @@ public class MainActivity extends Activity {
         feature.setElevation(d(3));
         LinearLayout.LayoutParams fp=lp(-1,140);fp.bottomMargin=d(12);
         page.addView(feature,fp);
-        CableVisual art=new CableVisual(this,1);
+        CableVisual art=new CableVisual(this,10);
         FrameLayout.LayoutParams imageLp=new FrameLayout.LayoutParams(d(143),d(132),
                 rtl()?Gravity.LEFT|Gravity.CENTER_VERTICAL:Gravity.RIGHT|Gravity.CENTER_VERTICAL);
         feature.addView(art,imageLp);
