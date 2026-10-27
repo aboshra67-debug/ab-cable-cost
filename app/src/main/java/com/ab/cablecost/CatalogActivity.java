@@ -235,7 +235,12 @@ public class CatalogActivity extends Activity {
         gap(bom,5);
         bom.addView(text("الوزن النظري للنحاس محسوب. باقي الطبقات أدخل استهلاكها الفعلي من المصنع؛ مش هنخترع أوزان.",13,MUTED,false));
         gap(bom,13);
-        for(String mat:selected.materials){
+        List<String> recipeMaterials=new ArrayList<>(Arrays.asList(selected.materials));
+        String additional=pref.getString(key("extraMaterials"),"");
+        for(String x:additional.split("\\n")){
+            if(!x.trim().isEmpty()&&!recipeMaterials.contains(x.trim()))recipeMaterials.add(x.trim());
+        }
+        for(String mat:recipeMaterials){
             LinearLayout section=vertical();
             LinearLayout.LayoutParams qp=new LinearLayout.LayoutParams(-1,-2);
             qp.bottomMargin=dp(14);bom.addView(section,qp);
@@ -280,6 +285,24 @@ public class CatalogActivity extends Activity {
             section.addView(new View(this),new LinearLayout.LayoutParams(-1,dp(1)));
             rows.add(new Row(mat,unit,consumption,waste,wasteUnit,theory));
         }
+        button(bom,"أضف خامة لوصفة الكابل",()->{
+            List<String> names=materialNames();
+            String[] items=names.toArray(new String[0]);
+            new AlertDialog.Builder(this)
+                .setTitle("اختار خامة تضيفها للوصفة")
+                .setItems(items,(dialog,which)->{
+                    String name=items[which];
+                    String original=pref.getString(key("extraMaterials"),"");
+                    if(original.contains(name+"\\n")||
+                        Arrays.asList(selected.materials).contains(name)){
+                        message("الخامة دي موجودة في الوصفة بالفعل.");
+                        return;
+                    }
+                    pref.edit().putString(key("extraMaterials"),original+name+"\\n").apply();
+                    renderSpec();
+                })
+                .setNegativeButton("إلغاء",null).show();
+        },false);
         button(bom,"احفظ وصفة المصنع",()->saveRecipe(),true);
 
         LinearLayout costing=vertical();costing.setPadding(dp(14),dp(14),dp(14),dp(14));
@@ -307,6 +330,7 @@ public class CatalogActivity extends Activity {
         calculation.setPadding(dp(12),dp(12),dp(12),dp(12));
         calculation.setBackground(bg(SOFT,12,GOLD));
         costing.addView(calculation);
+        calculate();
     }
     double parse(String s,String field,boolean optional) {
         s=s.trim().replace('٫','.').replace('٬','.').replace(',','.');
