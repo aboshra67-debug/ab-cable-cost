@@ -387,7 +387,7 @@ public class CatalogActivity extends Activity {
                 if(r.wasteUnit.getSelectedItemPosition()==0)extra=required*w/100;
                 else if(r.unit.equals("متر"))
                     throw new IllegalArgumentException("الهالك بالكيلو مش مناسب للخامة بالمتر.");
-                else extra=r.unit.equals("جرام")?w*1000:w;
+                else extra=w; // kg of wastage is kg regardless of purchase price unit
                 double bought=required+extra;
                 double cost=r.unit.equals("جرام")?bought*1000*price:bought*price;
                 // For g/m input and gram purchase pricing, calculation needs grams:
