@@ -8,7 +8,21 @@ android {
         applicationId 'com.ab.cablecost'
         minSdk 23
         targetSdk 35
-        versionCode 10
-        versionName '0.5.3-company-selector'
+        versionCode 11
+        versionName '0.5.4-safe-install'
+        manifestPlaceholders = [appLabel: 'AB Cable Cost']
+    }
+    buildTypes {
+        // Debug remains for ongoing regression tests and existing package.
+        debug { }
+        // Side-by-side variant: does not modify or overwrite the installed
+        // com.ab.cablecost app even if its historic debug key differs.
+        parallel {
+            initWith debug
+            matchingFallbacks = ['debug']
+            applicationIdSuffix '.safe'
+            versionNameSuffix '-parallel'
+            manifestPlaceholders = [appLabel: 'AB Cable Cost - New']
+        }
     }
 }
