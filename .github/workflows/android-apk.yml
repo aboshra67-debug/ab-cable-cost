@@ -27,6 +27,8 @@ jobs:
           javac -encoding UTF-8 -d build/verify \
             app/src/main/java/com/ab/cablecost/CountryNames.java \
             app/src/main/java/com/ab/cablecost/VerifiedCableData.java \
+            app/src/main/java/com/ab/cablecost/CableCatalog.java \
+            app/src/main/java/com/ab/cablecost/CableLinks.java \
             tools/VerifyLibraryData.java
           java -cp build/verify VerifyLibraryData .
       - name: Calculation core gives identical results to the original screen code

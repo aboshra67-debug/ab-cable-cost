@@ -1,3 +1,5 @@
+import com.ab.cablecost.CableCatalog;
+import com.ab.cablecost.CableLinks;
 import com.ab.cablecost.CountryNames;
 import com.ab.cablecost.VerifiedCableData;
 
@@ -24,7 +26,8 @@ import java.util.zip.Inflater;
  *
  *   javac -encoding UTF-8 -d build/verify \
  *     app/src/main/java/com/ab/cablecost/CountryNames.java \
- *     app/src/main/java/com/ab/cablecost/VerifiedCableData.java tools/VerifyLibraryData.java
+ *     app/src/main/java/com/ab/cablecost/VerifiedCableData.java \
+ *     app/src/main/java/com/ab/cablecost/CableCatalog.java app/src/main/java/com/ab/cablecost/CableLinks.java tools/VerifyLibraryData.java
  *   java -cp build/verify VerifyLibraryData
  *
  * Fails (exit 1) when a record is incomplete, a number written into a record is
@@ -121,6 +124,24 @@ public final class VerifyLibraryData {
                 }
             }
         }
+        // ---- costing catalog <-> library: linked pairs must agree, gaps are listed -------------
+        Map<String,CableCatalog.Spec> specs=new HashMap<>();
+        for(CableCatalog.Spec sp:CableCatalog.all())specs.put(sp.id,sp);
+        for(Map.Entry<String,String> link:CableLinks.all().entrySet()){
+            CableCatalog.Spec sp=specs.get(link.getKey());
+            VerifiedCableData.Cable vc=VerifiedCableData.byId(link.getValue());
+            if(sp==null||vc==null){fail("link "+link.getKey()+" -> "+link.getValue()+" points to a missing record");continue;}
+            Matcher dm=Pattern.compile("(\\d+(?:[.,]\\d+)?)\\s*mm").matcher(vc.diameter);
+            if(!dm.find()||Math.abs(Double.parseDouble(dm.group(1).replace(',','.'))-sp.finishedDiameterMm)>0.011)
+                fail("link "+sp.id+": catalog diameter "+sp.finishedDiameterMm+" mm disagrees with library '"+vc.diameter+"'");
+            if(!sp.sourceUrl.equals(vc.sourceUrl))
+                fail("link "+sp.id+": catalog sourceUrl differs from library sourceUrl");
+        }
+        StringBuilder gap=new StringBuilder();
+        int publishedOnly=0;
+        for(CableCatalog.Spec sp:CableCatalog.all())
+            if(sp.published&&CableLinks.verifiedIdFor(sp.id)==null){publishedOnly++;gap.append(' ').append(sp.id);}
+        System.out.println("published catalog specs without a library card ("+publishedOnly+"):"+gap);
         // ---- 150 companies: countries translated, chooser lists exactly 150 ------
         String asset=new String(Files.readAllBytes(root.resolve(
             "app/src/main/assets/global_150_candidates_zlib_base64.txt")),StandardCharsets.UTF_8).trim();
