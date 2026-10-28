@@ -1,5 +1,8 @@
 package com.ab.cablecost;
 
+import com.ab.cablecost.core.ConductorMath;
+import com.ab.cablecost.core.NumberParser;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -390,42 +393,21 @@ public class CalculatorActivity extends Activity {
     }
 
     private double number(EditText edit, String title) {
-        String s = edit.getText().toString().trim()
-                .replace('٫', '.').replace('٬', '.').replace(',', '.');
-        StringBuilder converted = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            int digit = Character.digit(c, 10);
-            converted.append(digit < 0 ? c : (char) ('0' + digit));
-        }
-        try {
-            double value = Double.parseDouble(converted.toString());
-            if (Double.isNaN(value) || Double.isInfinite(value))
-                throw new NumberFormatException();
-            return value;
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("راجع " + title + " واكتب رقم صحيح.");
-        }
+        return NumberParser.finite(edit.getText().toString(), title);
     }
 
     private double conductor() {
         double d = number(diameter, "قطر الشعرة");
         double n = number(strands, "عدد الشعرات");
         double l = number(length, "الطول");
-        if (d <= 0 || n <= 0 || l <= 0 || n != Math.floor(n))
-            throw new IllegalArgumentException(
-                    "المقاسات لازم تكون أكبر من صفر، وعدد الشعرات عدد صحيح.");
-        int m = metal.getSelectedItemPosition();
-        double density = (m == 1 || m == 2) ? 2.70 : 8.96;
-        double factor = (m >= 2) ? 1.05 : 1.0;
-        return Math.PI / 4 * d * d * n * l * density * factor;
+        return ConductorMath.conductorGrams(d, n, l, metal.getSelectedItemPosition());
     }
 
     private void calc() {
         try {
             double grams = conductor();
-            double area = Math.PI / 4 * Math.pow(number(diameter, "قطر الشعرة"), 2)
-                    * number(strands, "عدد الشعرات");
+            double area = ConductorMath.crossSectionMm2(
+                    number(diameter, "قطر الشعرة"), number(strands, "عدد الشعرات"));
             showResult(conductorResult, conductorText,
                     String.format(Locale.US,
                             "وزن الموصل: %,.2f جرام\n= %,.4f كجم\nمساحة مقطع المعدن: %.4f مم²",
@@ -440,18 +422,15 @@ public class CalculatorActivity extends Activity {
             double bare = conductor();
             double plastic;
             if (mode.getSelectedItemPosition() == 0) {
-                plastic = number(insulated, "وزن السلك المعزول") - bare;
+                plastic = ConductorMath.insulationFromWeight(
+                        number(insulated, "وزن السلك المعزول"), bare);
             } else {
                 double bareOD = number(conductorOuter, "قطر الموصل");
                 double finishedOD = number(outer, "قطر السلك المعزول");
                 double density = number(plasticDensity, "كثافة العزل");
-                if (bareOD <= 0 || finishedOD <= bareOD || density <= 0)
-                    throw new IllegalArgumentException("راجع الأقطار والكثافة: لازم تكون موجبة وقطر العزل أكبر.");
-                plastic = Math.PI / 4 * (finishedOD * finishedOD - bareOD * bareOD)
-                        * number(length, "الطول") * density;
+                plastic = ConductorMath.insulationFromGeometry(bareOD, finishedOD, density,
+                        number(length, "الطول"));
             }
-            if (plastic < 0)
-                throw new IllegalArgumentException("وزن العزل طلع بالسالب. راجع وزن العينة.");
             showResult(insulationResult, insulationText,
                     String.format(Locale.US,
                             "وزن العزل: %,.2f جرام\n= %,.4f كجم\n%s",
@@ -467,13 +446,13 @@ public class CalculatorActivity extends Activity {
     private void cost() {
         try {
             double p = number(price, "سعر الكيلو");
-            if (p < 0) throw new IllegalArgumentException("السعر لازم يكون صفر أو أكبر.");
-            double metalKg = conductor() / 1000.0;
-            double total = metalKg * p;
+            ConductorMath.requireNonNegativePrice(p);
+            double grams = conductor();
+            ConductorMath.Cost c = ConductorMath.conductorCost(grams, p, number(length, "الطول"));
             showResult(costResult, costText,
                     String.format(Locale.US,
                             "تكلفة الموصل: %,.2f\nتكلفة المتر: %,.4f\nالوزن: %,.4f كجم\nمش شامل العزل أو التصنيع.",
-                            total, total / number(length, "الطول"), metalKg), false);
+                            c.total, c.perMeter, c.kg), false);
         } catch (Exception e) {
             showResult(costResult, costText, e.getMessage(), true);
         }

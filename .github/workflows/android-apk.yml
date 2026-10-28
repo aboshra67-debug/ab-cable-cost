@@ -29,6 +29,11 @@ jobs:
             app/src/main/java/com/ab/cablecost/VerifiedCableData.java \
             tools/VerifyLibraryData.java
           java -cp build/verify VerifyLibraryData .
+      - name: Calculation core gives identical results to the original screen code
+        run: |
+          mkdir -p build/parity
+          javac -encoding UTF-8 -d build/parity app/src/main/java/com/ab/cablecost/core/*.java tools/VerifyCoreParity.java
+          java -Dfile.encoding=UTF-8 -cp build/parity VerifyCoreParity
 
   build-apk:
     runs-on: ubuntu-latest

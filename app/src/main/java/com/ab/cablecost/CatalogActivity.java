@@ -1,5 +1,8 @@
 package com.ab.cablecost;
 
+import com.ab.cablecost.core.NumberParser;
+import com.ab.cablecost.core.RecipeCosting;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -443,18 +446,7 @@ public class CatalogActivity extends Activity {
         calculate();
     }
     double parse(String s,String field,boolean optional) {
-        s=s.trim().replace('٫','.').replace('٬','.').replace(',','.');
-        StringBuilder b=new StringBuilder();
-        for(int i=0;i<s.length();i++){
-            char c=s.charAt(i);int v=Character.digit(c,10);
-            b.append(v<0?c:(char)('0'+v));
-        }
-        if(optional&&b.length()==0)return Double.NaN;
-        try{
-            double n=Double.parseDouble(b.toString());
-            if(Double.isInfinite(n)||Double.isNaN(n)||n<0)throw new NumberFormatException();
-            return n;
-        }catch(Exception e){throw new IllegalArgumentException("راجع "+field+"؛ محتاج رقم صحيح غير سالب.");}
+        return NumberParser.nonNegative(s,field,optional);
     }
     double value(EditText e,String title,boolean optional){
         return parse(e.getText().toString(),title,optional);
@@ -476,49 +468,21 @@ public class CatalogActivity extends Activity {
     }
     void calculate(){
         try{
-            double l=value(length,"الطول",false);
-            if(l<=0)throw new IllegalArgumentException("الطول لازم يكون أكبر من صفر.");
-            double total=0;boolean missing=false;
-            List<String> missingNames=new ArrayList<>();
+            List<RecipeCosting.Row> input=new ArrayList<>();
+            for(Row r:rows)
+                input.add(new RecipeCosting.Row(r.material,r.unit,r.amount.getText().toString(),
+                    getPrice(r.material),r.waste.getText().toString(),
+                    r.wasteUnit.getSelectedItemPosition()));
+            RecipeCosting.Result res=RecipeCosting.calculate(length.getText().toString(),input,
+                operation.getText().toString(),operationUnit.getSelectedItemPosition(),
+                operatingLength.getText().toString());
+            double l=res.length,total=res.total,operational=res.operational;
             StringBuilder detail=new StringBuilder();
-            for(Row r:rows){
-                double usage=value(r.amount,r.material,true);
-                double price=getPrice(r.material);
-                double w=value(r.waste,r.material+" هالك",true);
-                if(Double.isNaN(w))w=0;
-                if(Double.isNaN(usage)){
-                    missing=true;missingNames.add(r.material+" (الاستهلاك)");continue;
-                }
-                if(usage>0&&price<=0){
-                    missing=true;missingNames.add(r.material+" (السعر)");continue;
-                }
-                double required=r.unit.equals("متر")?usage*l:usage*l/1000.0;
-                double extra;
-                if(r.wasteUnit.getSelectedItemPosition()==0)extra=required*w/100;
-                else if(r.unit.equals("متر"))
-                    throw new IllegalArgumentException("الهالك بالكيلو مش مناسب للخامة بالمتر.");
-                else extra=w; // kg of wastage is kg regardless of purchase price unit
-                double bought=required+extra;
-                double cost=r.unit.equals("جرام")?bought*1000*price:bought*price;
-                // For g/m input and gram purchase pricing, calculation needs grams:
-                // required is kg (usage*g/m*m/1000). Convert kg -> grams.
-                total+=cost;
+            for(RecipeCosting.Line line:res.lines)
                 detail.append(String.format(Locale.US,
-                    "%s: %.2f %s | تكلفة %.2f\n",r.material,
-                    r.unit.equals("جرام")?bought*1000:bought,r.unit,cost));
-            }
-            double op=value(operation,"تكلفة التشغيل",true);
-            if(Double.isNaN(op))op=0;
-            double operational;
-            if(operationUnit.getSelectedItemPosition()==0)operational=op*l;
-            else{
-                double roll=value(operatingLength,"طول اللفة",false);
-                if(roll<=0)throw new IllegalArgumentException("طول اللفة لازم أكبر من صفر.");
-                operational=op*l/roll;
-            }
-            total+=operational;
-            String status=missing?"⚠ حساب غير مكتمل — لازم تدخل بيانات:\n"+
-                join(missingNames)+"\n\n":"";
+                    "%s: %.2f %s | تكلفة %.2f\n",line.material,line.quantity,line.unit,line.cost));
+            String status=res.missing?"⚠ حساب غير مكتمل — لازم تدخل بيانات:\n"+
+                join(res.missingNames)+"\n\n":"";
             calculation.setText(String.format(Locale.US,
                 "%sتكلفة المواد المدخلة + التشغيل: %,.2f %s\nللمتر: %,.4f %s\nتشغيل: %,.2f\n\n%s\n%s",
                 status,total,savedCurrency(),total/l,savedCurrency(),operational,
