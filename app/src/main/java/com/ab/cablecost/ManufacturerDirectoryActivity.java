@@ -72,6 +72,8 @@ public final class ManufacturerDirectoryActivity extends Activity {
         getWindow().setNavigationBarColor(NAVY);
         String initialQuery=getIntent().getStringExtra("query");
         if(initialQuery!=null)lastQuery=initialQuery.trim();
+        String initialCountry=getIntent().getStringExtra("country");
+        if(initialCountry!=null&&!initialCountry.trim().isEmpty())country=initialCountry.trim();
         try{
             companies.addAll(ManufacturerCandidates.all(this));
             readBrands();
@@ -224,7 +226,8 @@ public final class ManufacturerDirectoryActivity extends Activity {
     private void redrawFilterControls(){
         filterBar.removeAllViews();
         TextView countries=LibraryUi.chip(this,
-            tr("country")+" · "+(country.equals("*")?tr("all"):country)+" ▾",
+            tr("country")+" · "+(country.equals("*")?tr("all"):
+                CountryNames.name(country,I18n.index(this)))+" ▾",
             !country.equals("*"),this::pickCountry);
         filterBar.addView(countries,new LinearLayout.LayoutParams(0,-1,1));
         if(!showBrands) {
@@ -239,11 +242,15 @@ public final class ManufacturerDirectoryActivity extends Activity {
         Set<String> countries=new HashSet<>();
         if(showBrands){for(BrandEntry b:brands)countries.add(b.country);}
         else for(ManufacturerCandidates.Record c:companies)countries.add(c.countryAr);
-        List<String> sorted=new ArrayList<>(countries);Collections.sort(sorted);
-        sorted.add(0,tr("all"));
+        final int language=I18n.index(this);
+        final List<String> keys=new ArrayList<>(countries);
+        Collections.sort(keys,(x,y)->CountryNames.name(x,language).compareToIgnoreCase(CountryNames.name(y,language)));
+        final List<String> labels=new ArrayList<>();
+        for(String key:keys)labels.add(CountryNames.name(key,language));
+        labels.add(0,tr("all"));
         new AlertDialog.Builder(this).setTitle(tr("country"))
-            .setItems(sorted.toArray(new String[0]),(d,i)->{
-                country=i==0?"*":sorted.get(i);
+            .setItems(labels.toArray(new String[0]),(d,i)->{
+                country=i==0?"*":keys.get(i-1);
                 redrawFilterControls();applyFilter();
             }).setNegativeButton(tr("cancel"),null).show();
     }
@@ -283,7 +290,7 @@ public final class ManufacturerDirectoryActivity extends Activity {
         return tr("unverifiedCatalog");
     }
     private void openCompany(ManufacturerCandidates.Record r){
-        String message=tr("pendingReviewOnly")+"\n\n"+r.id+" • "+r.countryAr+
+        String message=tr("pendingReviewOnly")+"\n\n"+r.id+" • "+CountryNames.name(r.countryAr,I18n.index(this))+
             "\n"+tr("reviewFilter")+": "+reviewLabel(r)+
             "\n"+tr("researchDate")+": "+ManufacturerCandidates.Record.RESEARCH_DATE+
             "\n"+tr("websiteCandidate")+": "+
@@ -357,7 +364,7 @@ public final class ManufacturerDirectoryActivity extends Activity {
             if(obj instanceof ManufacturerCandidates.Record) {
                 ManufacturerCandidates.Record r=(ManufacturerCandidates.Record)obj;
                 main.setText(r.name);
-                sub.setText(r.id+"  ·  "+r.countryAr);
+                sub.setText(r.id+"  ·  "+CountryNames.name(r.countryAr,I18n.index(this)));
                 status.setText("◷ "+tr("pendingReviewOnly")+"  ·  "+reviewLabel(r));
             }else{
                 BrandEntry b=(BrandEntry)obj;

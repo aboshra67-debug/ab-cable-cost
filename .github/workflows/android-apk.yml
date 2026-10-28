@@ -10,9 +10,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  library-data-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Verify all 150 imported candidates and separate brands
+        run: python3 tools/verify_import_data.py
+      - name: Verify source-backed cable records against archived datasheet quotes
+        run: |
+          mkdir -p build/verify
+          javac -encoding UTF-8 -d build/verify \
+            app/src/main/java/com/ab/cablecost/CountryNames.java \
+            app/src/main/java/com/ab/cablecost/VerifiedCableData.java \
+            tools/VerifyLibraryData.java
+          java -cp build/verify VerifyLibraryData .
+
   build-apk:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    outputs:
+      signed: ${{ steps.keycheck.outputs.has_key }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -29,7 +51,7 @@ jobs:
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"
       - name: Verify all 150 imported candidates and separate brands
         run: python3 tools/verify_import_data.py
-      - name: Build APK
+      - name: Build debug and side-by-side APKs
         run: gradle :app:assembleDebug :app:assembleParallel --no-daemon --stacktrace
       - name: Verify APK signature and Android package
         shell: bash
@@ -44,15 +66,69 @@ jobs:
       - name: Publish build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.5.4-Debug-APK
+          name: AB-Cable-Cost-V0.5.5-Debug-APK
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
       - name: Publish separate safe-install APK
         uses: actions/upload-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.5.4-Parallel-APK
+          name: AB-Cable-Cost-V0.5.5-Parallel-APK
           path: app/build/outputs/apk/parallel/*.apk
           if-no-files-found: error
+
+      # ---- Stable release (permanent key). Needs the four repository secrets from signing/README.md ----
+      - name: Check stable signing secrets
+        id: keycheck
+        shell: bash
+        env:
+          AB_KEYSTORE_BASE64: ${{ secrets.AB_KEYSTORE_BASE64 }}
+          AB_KEYSTORE_PASSWORD: ${{ secrets.AB_KEYSTORE_PASSWORD }}
+          AB_KEY_ALIAS: ${{ secrets.AB_KEY_ALIAS }}
+          AB_KEY_PASSWORD: ${{ secrets.AB_KEY_PASSWORD }}
+        run: |
+          if [ -n "$AB_KEYSTORE_BASE64" ] && [ -n "$AB_KEYSTORE_PASSWORD" ] && [ -n "$AB_KEY_ALIAS" ] && [ -n "$AB_KEY_PASSWORD" ]; then
+            echo "has_key=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_key=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Stable signing secrets are not set: the signed release APK is skipped. See signing/README.md."
+          fi
+      - name: Build stable signed release APK (and a CI-only higher-versionCode copy)
+        if: steps.keycheck.outputs.has_key == 'true'
+        shell: bash
+        env:
+          AB_KEYSTORE_BASE64: ${{ secrets.AB_KEYSTORE_BASE64 }}
+          AB_KEYSTORE_PASSWORD: ${{ secrets.AB_KEYSTORE_PASSWORD }}
+          AB_KEY_ALIAS: ${{ secrets.AB_KEY_ALIAS }}
+          AB_KEY_PASSWORD: ${{ secrets.AB_KEY_PASSWORD }}
+        run: |
+          export AB_KEYSTORE_FILE="$RUNNER_TEMP/ab-cable-cost-release.jks"
+          printf '%s' "$AB_KEYSTORE_BASE64" | base64 -d > "$AB_KEYSTORE_FILE"
+          mkdir -p dist ci-only
+          gradle :app:assembleRelease --no-daemon --stacktrace
+          cp app/build/outputs/apk/release/app-release.apk dist/AB_Cable_Cost_V0.5.5_stable_signed.apk
+          # Same key, versionCode 13: used ONLY by the emulator job to prove in-place updates work.
+          gradle :app:assembleRelease --no-daemon --stacktrace -PabVersionCode=13
+          cp app/build/outputs/apk/release/app-release.apk ci-only/ci_upgrade_test_versionCode13.apk
+          rm -f "$AB_KEYSTORE_FILE"
+      - name: Verify release APK (v1/v2/v3, pinned certificate, not debuggable, aligned)
+        if: steps.keycheck.outputs.has_key == 'true'
+        shell: bash
+        run: bash tools/ci_verify_release_apk.sh dist/AB_Cable_Cost_V0.5.5_stable_signed.apk
+      - name: Publish stable signed APK
+        if: steps.keycheck.outputs.has_key == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AB-Cable-Cost-V0.5.5-Stable-Signed-APK
+          path: dist/*.apk
+          if-no-files-found: error
+      - name: Publish CI-only update-test APK (do not install on a phone)
+        if: steps.keycheck.outputs.has_key == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AB-Cable-Cost-CI-ONLY-Upgrade-Test
+          path: ci-only/*.apk
+          if-no-files-found: error
+
       - name: Publish Android signing tools for offline stable signing
         uses: actions/upload-artifact@v4
         with:
@@ -64,14 +140,15 @@ jobs:
       - name: Prepare Safe Source archive
         shell: bash
         run: |
-          zip -rq AB_CABLE_COST_V0_5_4_SAFE_SOURCE.zip . \
-            -x '.git/*' '.gradle/*' '*/build/*' 'screenshots/*' 'AB_CABLE_COST_V0_5_4_SAFE_SOURCE.zip'
-          unzip -t AB_CABLE_COST_V0_5_4_SAFE_SOURCE.zip | tail -2
+          zip -rq AB_CABLE_COST_V0_5_5_SAFE_SOURCE.zip . \
+            -x '.git/*' '.gradle/*' '*/build/*' 'build/*' 'dist/*' 'ci-only/*' 'screenshots/*' \
+               '*.jks' '*.keystore' 'AB_CABLE_COST_V0_5_5_SAFE_SOURCE.zip'
+          unzip -t AB_CABLE_COST_V0_5_5_SAFE_SOURCE.zip | tail -2
       - name: Publish Safe Source
         uses: actions/upload-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.5.4-Safe-Source
-          path: AB_CABLE_COST_V0_5_4_SAFE_SOURCE.zip
+          name: AB-Cable-Cost-V0.5.5-Safe-Source
+          path: AB_CABLE_COST_V0_5_5_SAFE_SOURCE.zip
           if-no-files-found: error
 
   emulator-smoke:
@@ -82,7 +159,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.5.4-Debug-APK
+          name: AB-Cable-Cost-V0.5.5-Debug-APK
           path: artifact
       - name: Configure KVM
         run: |
@@ -101,11 +178,12 @@ jobs:
             sleep 2
             adb shell pidof com.ab.cablecost
             python3 tools/verify_library_ui.py
+            python3 tools/verify_country_filter_ui.py com.ab.cablecost || echo "::warning::Advisory Country-filter UI test failed; see the UI preview artifact"
       - name: Publish UI preview
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.5.4-UI-Preview
+          name: AB-Cable-Cost-V0.5.5-UI-Preview
           path: |
             screenshots/home.png
             screenshots/global_library_ar.png
@@ -118,6 +196,8 @@ jobs:
             screenshots/manufacturer_filter_150.png
             screenshots/manufacturer_filter_search.png
             screenshots/manufacturer_selected_profile.png
+            screenshots/country_picker_en.png
+            screenshots/country_australia_en.png
             screenshots/*.xml
           if-no-files-found: warn
 
@@ -129,12 +209,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.5.4-Debug-APK
+          name: AB-Cable-Cost-V0.5.5-Debug-APK
           path: artifact
       - name: Download parallel install APK
         uses: actions/download-artifact@v4
         with:
-          name: AB-Cable-Cost-V0.5.4-Parallel-APK
+          name: AB-Cable-Cost-V0.5.5-Parallel-APK
           path: safe
       - name: Configure KVM
         run: |
@@ -162,3 +242,35 @@ jobs:
             adb shell pidof com.ab.cablecost.safe
             adb shell pm path com.ab.cablecost
             echo "PASS Android 16: both original and safe-install apps co-exist"
+
+  stable-release-install:
+    needs: build-apk
+    if: needs.build-apk.outputs.signed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        api-level: [35, 36]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: AB-Cable-Cost-V0.5.5-Stable-Signed-APK
+          path: stable
+      - uses: actions/download-artifact@v4
+        with:
+          name: AB-Cable-Cost-CI-ONLY-Upgrade-Test
+          path: upgrade
+      - name: Configure KVM
+        run: |
+          if test -e /dev/kvm; then sudo chmod 666 /dev/kvm; fi
+      - name: Stable APK installs, launches and updates in place on Android ${{ matrix.api-level }}
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: bash tools/ci_release_install_test.sh stable/AB_Cable_Cost_V0.5.5_stable_signed.apk upgrade/ci_upgrade_test_versionCode13.apk

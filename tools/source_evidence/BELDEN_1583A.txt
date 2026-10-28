@@ -1,0 +1,18 @@
+SOURCE: https://catalog.belden.com/techdata/EN/1583A_techdata.pdf
+FETCHED: 2026-10-28 (two independent extraction passes agreed)
+Title: "Category 5e Cable, 4 Pair, U/UTP, CMR"
+Description: "Category 5e Premise Horizontal Cable (200MHz), 4 Pair, 24 AWG Solid Bare Copper Conductors, U/UTP, Riser-CMR, PVC Jacket"
+Conductor row: "24 AWG Solid BC - Bare Copper 4"
+Insulation row: "PO - Polyolefin White/Blue Stripe & Blue, White/Orange Stripe & Orange, White/Green Stripe & Green," "White/Brown Stripe & Brown"
+Insulation thickness: NOT PRESENT
+Shield/separator: NOT PRESENT (listed only as "U/UTP")
+Jacket: "PVC - Polyvinyl Chloride 0.190 in (4.83 mm)"  (jacket thickness not listed)
+Overall Cable Diameter (Nominal): 0.190 in (4.83 mm)
+Voltage: "300 V (CMR)"
+Max. Conductor DCR: "93.8 Ohm/km (28.6 Ohm/1000ft)"
+Impedance: "Max./Min. Input Impedance (unFitted) [Ohm]" "100 ± 15"; "Max./Min. Fitted Impedance [Ohm]" "100 ± 15"
+Temperature: "-20°C To +75°C" (Operating)
+Max current: NOT PRESENT
+Standards: "Data Category: Category 5e"; "TIA/EIA Compliance: ANSI/TIA-568.2-D Category 5e"; "ISO/IEC Compliance: ISO/IEC 11801-1, IEC 61156-5"; "NEC / UL Compliance: Article 800, CMR"
+Applications: "Premise Horizontal Cable, Ethernet 1000BASE-T, Ethernet 100BASE-TX, Ethernet 10BASE-T, PoE++, PoE+, PoE"
+Revision: "Revision Number: 0.796 Revision Date: 07-06-2026"

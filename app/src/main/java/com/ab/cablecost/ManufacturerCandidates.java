@@ -59,7 +59,7 @@ public final class ManufacturerCandidates {
                 throw new JSONException("Invalid review status: "+id);
         }
         public String searchKey(){
-            return (id+" "+name+" "+countryAr+" "+notes).toLowerCase(Locale.ROOT);
+            return (id+" "+name+" "+CountryNames.searchText(countryAr)+" "+notes).toLowerCase(Locale.ROOT);
         }
         public boolean hasCatalogCandidate(){return isHttps(catalogCandidate);}
         public boolean hasWebsiteCandidate(){return isHttps(websiteCandidate);}

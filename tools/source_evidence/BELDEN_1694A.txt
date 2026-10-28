@@ -1,0 +1,19 @@
+SOURCE: https://catalog.belden.com/techdata/EN/1694A_techdata.pdf
+FETCHED: 2026-10-28 (two independent extraction passes agreed)
+Title: "75 Ohm SDI Coax, RG-6, 18 AWG, Solid BC, Foil + 95% TC Braid, PVC Jkt, CMR"
+Center conductor: "18 AWG Solid 0.040 in BC - Bare Copper"
+Insulation/dielectric: "PE - Polyethylene (Foam) 0.180 in (4.57 mm) White"
+Shield 1: "Tape Tri-Laminate (Alum+Poly+Alum) Duofoil® 100%"
+Shield 2: "Braid Tinned Copper (TC) 95%"
+Jacket: "PVC - Polyvinyl Chloride 0.274 in (6.96 mm)"  (jacket thickness not listed)
+Overall Cable Diameter (Nominal): 0.274 in (6.96 mm)
+Nominal characteristic impedance: "75 Ohm"
+Nom. DCR: center conductor "6.4 Ohm/1000ft (21 Ohm/km)"; outer shield "3.8 Ohm/1000ft (12 Ohm/km)"
+Nom. Velocity of Propagation: "82%"
+Nom. Attenuation: "100 MHz 1.95 dB/100ft"; "1000 MHz 6.3 dB/100ft"; "3000 MHz 11.5 dB/100ft"
+Temperature: "UL Temperature Operating 60°C -30°C to +75°C"
+Voltage: "UL Voltage Rating 300 V (CMR, CMG)"
+Standards: "UL1666 Vertical Shaft"; "CPR Euroclass: Eca; CPR UKCA Class: Eca"; "NEC/UL: CMR"; "CEC/C(UL): CMG"; "EU CE Mark, EU Directive 2015/863/EU (RoHS 2 amendment), REACH, EU Directive 2011/65/EU (RoHS 2)"; "UKCA Mark"; "China RoHS II (GB/T 26572-2011)"; "Plenum Number: 1695A"
+Max current: NOT PRESENT
+Applications: "Suitable Applications: Digital Video, 6 Gb/s UHDTV, HD-SDI 1080p"
+Revision: "Revision Number: 0.716 Revision Date: 05-27-2026"

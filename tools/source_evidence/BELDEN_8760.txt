@@ -1,0 +1,18 @@
+SOURCE: https://catalog.belden.com/techdata/EN/8760_techdata.pdf
+FETCHED: 2026-10-28 (two independent extraction passes agreed)
+Description: "Electronic, 2 Conductor 18AWG (16x30) Tinned Copper, PE Insulation, Overall Beldfoil® Shield, PVC Outer Jacket, CM"
+Conductor table headers: "Element", "No. of Elements", "Size", "Stranding", "Material"
+Conductor row: "Pair(s)", "1", "18 AWG", "16x30", "TC - Tinned Copper"
+Insulation table headers: "Element", "Material", "Nom. Thickness", "Nom. Insulation Diameter", "Color Code"
+Insulation row: "Pair(s)", "PE - Polyethylene", "0.018 in (0.46 mm)", "0.082 in (2.1 mm)", "Black, Clear"
+Outer Shield table headers: "Shield Type", "Material", "Coverage", "Drainwire Type"
+Outer Shield row: "Tape", "Bi-Laminate (Alum+Poly)", "100%", "20 AWG (7x28) TC"
+Jacket: "PVC - Polyvinyl Chloride 0.028 in (0.71 mm)"
+Overall Cable Diameter (Nominal): 0.222 in (5.64 mm)
+Voltage: "300 V (CM), 300 V (UL AWM 2092))"
+Max current: "14 Amps per Conductor at 30ºC"
+Nominal Conductor DCR: "7.06 Ohm/1000ft"
+Temperature: "UL Temperature Operating" "60°C -20°C to +60°C"
+Standards: "UL 1685 UL loading , IEC 60332-1-2"; "CPR Euroclass: Eca; CPR UKCA Class: Eca"; "NEC / UL Compliance: Article 800, CM"; "AWM Compliance: AWM 2092"; "CEC / C(UL) Compliance: CM"; "Plenum Number: 88760, 87760 or 82760"; "European Directive Compliance: EU CE Mark, EU Directive 2015/863/EU (RoHS 2 amendment)"; "UK Regulation Compliance: UKCA Mark"
+Applications: "low voltage analog signals (4-20ma, 0-10v, ...); low voltage digital control (24v, …); line level audio; computer communication; panel wiring"
+Revision: "Revision Number: 0.667 Revision Date: 02-20-2026"

@@ -1,5 +1,15 @@
 plugins { id 'com.android.application' }
 
+// Signing material is NEVER stored in the repository. CI (or a local shell) provides it through
+// environment variables or -P Gradle properties; see signing/README.md.
+def abSetting = { String name ->
+    def value = System.getenv(name)
+    if (!value) value = project.findProperty(name)
+    return value ? value.toString() : null
+}
+// -PabVersionCode=NN lets CI build a higher-numbered copy to prove in-place updates work.
+def abVersionCode = (abSetting('abVersionCode') ?: '12').toInteger()
+
 android {
     namespace 'com.ab.cablecost'
     compileSdk 35
@@ -8,10 +18,25 @@ android {
         applicationId 'com.ab.cablecost'
         minSdk 23
         targetSdk 35
-        versionCode 11
-        versionName '0.5.4-safe-install'
+        versionCode abVersionCode
+        versionName '0.5.5-stable'
         manifestPlaceholders = [appLabel: 'AB Cable Cost']
     }
+
+    signingConfigs {
+        release {
+            if (abSetting('AB_KEYSTORE_FILE')) {
+                storeFile file(abSetting('AB_KEYSTORE_FILE'))
+                storePassword abSetting('AB_KEYSTORE_PASSWORD')
+                keyAlias abSetting('AB_KEY_ALIAS')
+                keyPassword abSetting('AB_KEY_PASSWORD')
+                enableV1Signing = true
+                enableV2Signing = true
+                enableV3Signing = true
+            }
+        }
+    }
+
     buildTypes {
         // Debug remains for ongoing regression tests and existing package.
         debug { }
@@ -24,5 +49,23 @@ android {
             versionNameSuffix '-parallel'
             manifestPlaceholders = [appLabel: 'AB Cable Cost - New']
         }
+        // Permanent, non-debuggable, stably signed build: com.ab.cablecost.app.
+        // No code shrinking in this release, so release behaves exactly like the tested debug code.
+        release {
+            applicationIdSuffix '.app'
+            debuggable false
+            minifyEnabled false
+            shrinkResources false
+            manifestPlaceholders = [appLabel: 'AB Cable Cost']
+            if (abSetting('AB_KEYSTORE_FILE')) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    lint {
+        // Lint is not part of the verified pipeline; do not let it block a signed build.
+        checkReleaseBuilds = false
+        abortOnError = false
     }
 }

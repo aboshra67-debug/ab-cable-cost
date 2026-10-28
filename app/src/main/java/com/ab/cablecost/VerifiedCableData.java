@@ -144,6 +144,132 @@ public final class VerifiedCableData {
             layer("التجديل","Braid shield","تجديل من النحاس المقصدر، تغطية بصرية 61%.","Tinned-copper braid, optical coverage 61%."),
             layer("الغلاف الخارجي","Outer sheath","PVC مثبط للهب، قطر الكابل التقريبي 6.20 مم.","Flame-retardant PVC, approximate OD 6.20 mm.")
         ));
+        // ---- V0.5.5 additions -------------------------------------------------
+        // Every value below is copied from the manufacturer's own datasheet named
+        // in sourceName/pdfUrl (verbatim quotes are archived in
+        // tools/source_evidence/ and checked by tools/VerifyLibraryData.java).
+        // Anything the datasheet does not state is null or says so explicitly.
+        records.add(new Cable(
+            "BELDEN_9841","9841","1 Pair × 24 AWG (7×32)","Belden","الولايات المتحدة","United States",
+            "Data","اتصالات وبيانات","Data & Telecom",
+            "2 × 24 AWG (7×32) TC (1 pair) / PE / overall Beldfoil® + TC braid / PVC",
+            "300 V (CM) · 30 V (UL AWM 2919)","2.1 A / conductor @ 25 °C (10 °C temperature rise)",
+            "24 Ω / 1000 ft (79 Ω/km) (nominal)",
+            "5.89 mm (0.232 in) (nominal)","-30 to +80 °C (UL temperature operating)",
+            "PE 0.58 mm nominal (0.023 in)",
+            "Al/polyester tape 100% with 24 AWG (7×32) TC drain wire + tinned-copper braid 90%",
+            "UL 1685 UL Loading · IEC 60332-1-2 · NEC Art. 800 CM · AWM 2919 · DMX-512 · CE / UKCA / RoHS as listed",
+            "RS-485 ونقاط البيع (POS) واتصالات الكمبيوتر والإشارات التناظرية منخفضة الجهد (4–20 مللي أمبير، 0–10 فولت) حسب نشرة الشركة.",
+            "RS-485, POS, computer communications and low-voltage analogue signals (4–20 mA, 0–10 V …) as listed by the manufacturer.",
+            "كابل RS-485 — زوج مجدول 24 AWG بشيلد فويل + جديلة",
+            "RS-485 cable — 1 pair 24 AWG, overall foil + braid shield",
+            "التيار 2.1 أمبير لكل موصل عند 25°C (ارتفاع حرارة 10°C) حسب Belden وليس تصنيفًا عامًا للتركيب. الممانعة المميزة الاسمية 120 أوم، والسعة بين الموصلين 12.8 pF/ft (42.0 pF/m). الرسم توضيحي.",
+            "2.1 A per conductor at 25 °C (10 °C temperature rise) is Belden's stated value, not a universal installed rating. Nominal characteristic impedance 120 Ω; conductor-to-conductor capacitance 12.8 pF/ft (42.0 pF/m). Diagram is schematic.",
+            "https://catalog.belden.com/techdata/EN/9841_techdata.pdf",
+            "https://catalog.belden.com/techdata/EN/9841_techdata.pdf",
+            "25 Feb 2026 · rev 0.725","Belden 9841 Technical Data Sheet",
+            layer("الموصل","Conductor","زوج واحد: موصلان نحاس مقصدر 24 AWG بتكوين 7×32.","1 pair: 2 × 24 AWG tinned-copper conductors, 7×32 stranding."),
+            layer("العزل","Insulation","بولي إيثيلين PE بسمك اسمي 0.58 مم؛ ألوان الزوج White/Blue Stripe وBlue/White Stripe.","PE, nominal thickness 0.58 mm; pair colours White/Blue Stripe & Blue/White Stripe."),
+            layer("الشيلد","Shield","شريط فويل ألومنيوم/بوليستر بتغطية 100% مع سلك تصريف 24 AWG (7×32) نحاس مقصدر، ثم جديلة نحاس مقصدر بتغطية 90%.","Al/polyester tape, 100% coverage, with 24 AWG (7×32) TC drain wire; then tinned-copper braid, 90% coverage."),
+            layer("الغلاف الخارجي","Outer jacket","PVC بسمك اسمي 0.89 مم، القطر النهائي الاسمي 5.89 مم.","PVC jacket, nominal thickness 0.89 mm; OD 5.89 mm.")
+        ));
+        records.add(new Cable(
+            "BELDEN_8760","8760","1 Pair × 18 AWG (16×30)","Belden","الولايات المتحدة","United States",
+            "Control","كنترول وشيلد","Control & Shielded",
+            "2 × 18 AWG (16×30) TC (1 pair) / PE / overall Beldfoil® / PVC",
+            "300 V (CM) · 300 V (UL AWM 2092)","14 A / conductor @ 30 °C",
+            "7.06 Ω / 1000 ft (nominal)",
+            "5.64 mm (0.222 in) (nominal)","-20 to +60 °C (UL temperature operating)",
+            "PE 0.46 mm nominal (0.018 in); black and clear",
+            "Al/polyester tape 100% with 20 AWG (7×28) TC drain wire",
+            "UL 1685 UL Loading · IEC 60332-1-2 · CPR Euroclass Eca · NEC Art. 800 CM · CEC/C(UL) CM · AWM 2092 · CE / UKCA as listed",
+            "إشارات تناظرية منخفضة الجهد (4–20 مللي أمبير، 0–10 فولت)، تحكم رقمي منخفض الجهد (24 فولت)، صوت بمستوى الخط، اتصالات الكمبيوتر وتوصيلات اللوحات حسب نشرة الشركة.",
+            "Low-voltage analogue signals (4–20 mA, 0–10 V …), low-voltage digital control (24 V …), line-level audio, computer communication and panel wiring as listed by the manufacturer.",
+            "كابل إلكترونيات/تحكم — زوج 18 AWG بشيلد فويل شامل",
+            "Electronic / control cable — 1 pair 18 AWG, overall foil shield",
+            "التيار 14 أمبير لكل موصل عند 30°C حسب Belden وليس تصنيفًا عامًا لكل التركيبات. نسخ Plenum المذكورة: 88760 أو 87760 أو 82760. الرسم توضيحي.",
+            "14 A per conductor at 30 °C is Belden's stated value, not a universal installed rating. Plenum numbers listed: 88760, 87760 or 82760. Diagram is schematic.",
+            "https://catalog.belden.com/techdata/EN/8760_techdata.pdf",
+            "https://catalog.belden.com/techdata/EN/8760_techdata.pdf",
+            "20 Feb 2026 · rev 0.667","Belden 8760 Technical Data Sheet",
+            layer("الموصل","Conductor","موصلان نحاس مقصدر 18 AWG بتكوين 16×30 (زوج واحد).","2 × 18 AWG tinned-copper conductors, 16×30 stranding (1 pair)."),
+            layer("العزل","Insulation","بولي إيثيلين PE بسمك اسمي 0.46 مم؛ الألوان Black وClear.","PE, nominal thickness 0.46 mm; colours Black and Clear."),
+            layer("الشيلد","Shield","شريط فويل ألومنيوم/بوليستر بتغطية 100% مع سلك تصريف 20 AWG (7×28) نحاس مقصدر.","Al/polyester tape, 100% coverage, with 20 AWG (7×28) TC drain wire."),
+            layer("الغلاف الخارجي","Outer jacket","PVC بسمك اسمي 0.71 مم، القطر النهائي الاسمي 5.64 مم.","PVC jacket, nominal thickness 0.71 mm; OD 5.64 mm.")
+        ));
+        records.add(new Cable(
+            "BELDEN_1694A","1694A","75 Ω · RG-6 · 18 AWG solid BC","Belden","الولايات المتحدة","United States",
+            "Coax","كابلات كاميرات ومحوري","Coax / CCTV",
+            "Solid bare Cu 18 AWG / foam PE / Duofoil® (Al+Poly+Al) + TC braid 95% / PVC",
+            "300 V (CMR, CMG)",null,
+            "Centre conductor 6.4 Ω / 1000 ft (21 Ω/km); outer shield 3.8 Ω / 1000 ft (12 Ω/km) (nominal)",
+            "6.96 mm (0.274 in) (nominal)","-30 to +75 °C (UL temperature operating)",
+            "Foam PE Ø4.57 mm (0.180 in) nominal, white",
+            "Duofoil® tri-laminate (Alum+Poly+Alum) 100% + tinned-copper braid 95%",
+            "NEC CMR · CEC CMG · UL 1666 Vertical Shaft · CPR Euroclass Eca · CE / UKCA / RoHS as listed",
+            "فيديو رقمي، UHDTV بسرعة 6 Gb/s، وHD-SDI 1080p حسب نشرة الشركة.",
+            "Digital video, 6 Gb/s UHDTV and HD-SDI 1080p as listed by the manufacturer.",
+            "كابل محوري SDI / RG-6 — 75 أوم، موصل نحاس مصمت 18 AWG",
+            "75 Ω SDI coax, RG-6 — 18 AWG solid bare copper centre conductor",
+            "75 أوم دي الممانعة المميزة وليست المقاومة المستمرة. لم تنشر النشرة تحمل تيار فلا نعرض رقمًا تقديريًا. سرعة الانتشار الاسمية 82%، والتوهين الاسمي: 1.95 dB/100ft عند 100 MHz و6.3 عند 1000 MHz و11.5 عند 3000 MHz.",
+            "75 Ω is characteristic impedance, not DC resistance. The datasheet publishes no ampacity, so none is invented. Nominal velocity of propagation 82%; nominal attenuation 1.95 dB/100 ft @ 100 MHz, 6.3 @ 1000 MHz, 11.5 @ 3000 MHz.",
+            "https://catalog.belden.com/techdata/EN/1694A_techdata.pdf",
+            "https://catalog.belden.com/techdata/EN/1694A_techdata.pdf",
+            "27 May 2026 · rev 0.716","Belden 1694A Technical Data Sheet",
+            layer("الموصل المركزي","Centre conductor","نحاس أحمر مصمت 18 AWG (0.040 in).","Solid bare copper, 18 AWG (0.040 in)."),
+            layer("العازل","Dielectric","بولي إيثيلين فوم بقطر اسمي 4.57 مم، أبيض.","Foam PE, nominal diameter 4.57 mm, white."),
+            layer("الشيلد الأول","Foil shield","Duofoil® ثلاثي الطبقات (ألومنيوم/بوليستر/ألومنيوم) بتغطية 100%.","Duofoil® tri-laminate (Alum+Poly+Alum), 100% coverage."),
+            layer("التجديل","Braid shield","جديلة نحاس مقصدر بتغطية 95%.","Tinned-copper braid, 95% coverage."),
+            layer("الغلاف الخارجي","Outer jacket","PVC؛ القطر النهائي الاسمي 6.96 مم. سمك الغلاف غير منشور في النشرة.","PVC jacket; OD 6.96 mm. Jacket thickness is not published in the datasheet.")
+        ));
+        records.add(new Cable(
+            "BELDEN_1583A","1583A","4 Pair × 24 AWG solid BC","Belden","الولايات المتحدة","United States",
+            "Data","اتصالات وبيانات","Data & Telecom",
+            "4 pairs × 24 AWG solid bare Cu / PO / U/UTP / PVC",
+            "300 V (CMR)",null,
+            "Max. conductor DCR 28.6 Ω / 1000 ft (93.8 Ω/km)",
+            "4.83 mm (0.190 in) (nominal)","-20 to +75 °C",
+            "Polyolefin (PO); pair colours white/blue stripe & blue, white/orange stripe & orange, white/green stripe & green, white/brown stripe & brown",
+            "U/UTP (unshielded, as designated in the datasheet)",
+            "Category 5e (200 MHz) · ANSI/TIA-568.2-D · ISO/IEC 11801-1 · IEC 61156-5 · NEC Art. 800 CMR",
+            "كابل أفقي للمباني (Premise Horizontal): Ethernet 1000BASE-T و100BASE-TX و10BASE-T وPoE وPoE+ وPoE++ حسب نشرة الشركة.",
+            "Premise horizontal cable: Ethernet 1000BASE-T, 100BASE-TX, 10BASE-T, PoE, PoE+ and PoE++ as listed by the manufacturer.",
+            "كابل شبكات Category 5e — 4 أزواج U/UTP",
+            "Category 5e cable — 4 pair U/UTP, CMR",
+            "القيمة المنشورة للمقاومة هي حد أقصى (Max) وليست قيمة اسمية. الممانعة 100 ± 15 أوم. لم تنشر النشرة تحمل تيار فلا نعرض رقمًا تقديريًا. الرسم توضيحي.",
+            "The published conductor DCR is a maximum, not a nominal value. Impedance 100 ± 15 Ω. No ampacity is published, so none is invented. Diagram is schematic.",
+            "https://catalog.belden.com/techdata/EN/1583A_techdata.pdf",
+            "https://catalog.belden.com/techdata/EN/1583A_techdata.pdf",
+            "06 Jul 2026 · rev 0.796","Belden 1583A Technical Data Sheet",
+            layer("الموصل","Conductor","4 أزواج؛ موصلات نحاس أحمر مصمت 24 AWG.","4 pairs of 24 AWG solid bare-copper conductors."),
+            layer("العزل","Insulation","بولي أوليفين PO بألوان الأزواج: أبيض/أزرق وأزرق، أبيض/برتقالي وبرتقالي، أبيض/أخضر وأخضر، أبيض/بني وبني. سمك العزل غير منشور.","Polyolefin (PO); pair colours white/blue stripe & blue, white/orange stripe & orange, white/green stripe & green, white/brown stripe & brown. Insulation thickness is not published."),
+            layer("الغلاف الخارجي","Outer jacket","PVC؛ القطر النهائي الاسمي 4.83 مم. سمك الغلاف غير منشور. التصنيف U/UTP أي بدون شيلد.","PVC jacket; OD 4.83 mm. Jacket thickness is not published. Designated U/UTP (no shield).")
+        ));
+        records.add(new Cable(
+            "PRYSMIAN_NYY_4X16RM","NYY 0,6/1KV CPR E","4 × 16 mm² RM","Prysmian","إيطاليا","Italy",
+            "Power","قوى","Power",
+            "4 × 16 mm² Cu, stranded (RM) / PVC core insulation / black PVC outer sheath",
+            "0.6/1 (1.2) kV (U0/U (Um))",
+            "16 mm² multi-core: 102 A in ground · 79 A in air (ground 20 °C, 0.7 m, soil 1 K·m/W; air 30 °C)",
+            "1.15 Ω/km @ 20 °C",
+            "22.2 mm (nominal)",
+            "Conductor max. +70 °C · short-circuit +160 °C · laying −5 to +50 °C",
+            "PVC (core insulation)",
+            null,
+            "EN 60228 · HD 603 (0.6/1 kV distribution cables) · EN 13501-6 · CPR E (as in the product designation) · core identification per HD 308 S2",
+            "لم تذكر النشرة استخدامات صريحة؛ النوع موصوف كابل توزيع 0.6/1 kV حسب HD 603.",
+            "The datasheet lists no explicit applications; it is described as a 0.6/1 kV distribution cable per HD 603.",
+            "كابل قوى NYY — 4 × 16 مم² نحاس، عزل وغلاف PVC",
+            "NYY power cable — 4 × 16 mm² copper, PVC insulated and sheathed",
+            "قيم التيار هي قيم جدول الشركة للكابلات متعددة القلوب بمقطع 16 مم² وبشروط الدفن/الهواء المذكورة، وليست تيار تصميم لتركيبك (لازم معاملات التجميع والحرارة). الوزن 1,084 كجم/كم، وأقل نصف قطر انحناء أثناء المد 267 مم، وتيار القصر (ثانية واحدة) 1.9 كيلو أمبير. كود -J ونوع Extruded مطبوعان في جدول النشرة كما هما. النشرة ديناميكية مولّدة بتاريخ 28/10/2026 ولا يوجد رقم مراجعة رسمي.",
+            "Current values are the datasheet's multi-core table values for 16 mm² under the stated ground/air conditions, not a design current for your installation (grouping and temperature corrections apply). Weight 1,084 kg/km; minimum bending radius during laying 267 mm; short-circuit current (1 s) 1.9 kA. Type code '-J' and variant 'Extruded' are printed in the table as shown. Dynamically generated datasheet dated 28/10/2026; no formal revision number.",
+            "https://datasheet.prysmiangroup.com/pdf/datasheet/en/332526",
+            "https://datasheet.prysmiangroup.com/pdf/datasheet/en/332526",
+            "RO00_NYY1KVCPRE · generated 28 Oct 2026","Prysmian NYY 0,6/1KV CPR E datasheet",
+            layer("الموصل","Conductor","نحاس مجدول بمقطع 16 مم² (4 قلوب)، مقاومة 1.15 أوم/كم عند 20°C.","Stranded copper, 16 mm² (4 cores); resistance 1.15 Ω/km at 20 °C."),
+            layer("العزل","Insulation","عزل القلوب PVC.","PVC core insulation."),
+            layer("الغلاف الخارجي","Outer sheath","غلاف خارجي PVC أسود، القطر النهائي الاسمي 22.2 مم.","Black PVC outer sheath; nominal OD 22.2 mm.")
+        ));
         CABLES=Collections.unmodifiableList(records);
     }
 

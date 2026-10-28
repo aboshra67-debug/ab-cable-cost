@@ -1,0 +1,18 @@
+SOURCE: https://datasheet.prysmiangroup.com/pdf/datasheet/en/332526
+FETCHED: 2026-10-28 (two independent extraction passes agreed; document is generated on demand)
+Product name: "NYY 0,6/1KV CPR E" (file: NYY1KVCPRE)
+Standards: "EN 60228 Conductorsof insulated cables"; "HD 603 Distribution cablesof rated voltage 0,6/1 kV"; "EN 13501-6 Fireclassification of construction productsand building"
+Rated voltage: "Rated voltage U0/U (Um) 0.6/1 (1.2)kV"
+Conductor: "Conductor material Copper"; "Conductor shapesector,class2=stranded"
+Insulation: "Coreinsulation material Polyvinyl chloride(PVC)"
+Sheath: "Materialouter sheath Polyvinyl chloride(PVC)"; "blackouter sheath"
+Temperatures: "Max.conductor temperature[°C] 70"; "Max.conductor temperatureat short circuit [°C] 160"; "Laying temperature(min) [°C] -5"; "Laying temperature(max) [°C] 50"
+Bending radius: "During installing: 15 x D single-corecables; 12 x D multi-cores cables"
+Marking: "Core identification (acc. HD 308 S2) Yes"
+Document stamp: "RO00_NYY1KVCPRE_28/10/2026" "© All rights reserved by Prysmian 2026"
+Cable Properties headers: "Type SAP code Variant Nominal outer diameter [mm] Cable weight [kg/km] Bending radius, during laying (min) [mm] Conductor resistance at 20° C [Ohm/km] Shortcircuit current conductor (1sec) [kA] DOP number"
+Cable Properties row: "4x16RM -J 20197422 Extruded 22.2 1,084 267 1.15 1.9 1002069"
+Current Carrying Capacity headers: "Crosssection (mm²) Direct in ground single-core DC (A) Direct in ground multi-cores(A) Direct in ground single-core trefoil (A) Airsinglecore DC (A) Air multicores(A) Airsinglecore trefoil (A)"
+Current Carrying Capacity row: "16 160 102 107 107 79 84"
+Conditions: "Ground temperature:20°C; Air temperature:30°C"; "Depth of laying: 0,7 m;Soil resistivity,moist: 1 K.m/W"
+Not defined in the document: meaning of "-J", "DC", "trefoil", variant names; no applications text; no screen/shield listed.

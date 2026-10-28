@@ -55,6 +55,14 @@ public class LibraryActivity extends Activity {
     private LinearLayout col(){return LibraryUi.col(this);}
     private LinearLayout row(){return LibraryUi.row(this);}
     private boolean isAr(){return LibraryUi.rtl(this);}
+    /** Country as shown in the filters: Arabic UI keeps the stored Arabic name,
+     * every other language shows the English name (same strings VerifiedCableData uses). */
+    private String countryLabel(String arabic){return isAr()?arabic:CountryNames.english(arabic);}
+    /** Arabic key of the selected country filter, or null when no country is selected. */
+    private String countryKeyAr(){
+        if(country.equals("*"))return null;
+        return isAr()?country:CountryNames.arabicFromEnglish(country);
+    }
 
     @Override public void onCreate(Bundle state){
         super.onCreate(state);
@@ -72,7 +80,7 @@ public class LibraryActivity extends Activity {
     }
     @Override protected void onResume(){
         super.onResume();
-        if(displayedLanguage!=I18n.index(this))renderPage();
+        if(displayedLanguage!=I18n.index(this)){country="*";renderPage();}
         else if(results!=null)updateResults();
     }
     private void renderPage(){
@@ -212,6 +220,10 @@ public class LibraryActivity extends Activity {
             else if(field.equals("voltage")&&c.voltage!=null)options.add(c.voltage);
             else if(field.equals("size"))options.add(c.size);
         }
+        // All 33 countries of the company directory are selectable, not only the
+        // countries that currently have source-backed cable records.
+        if(field.equals("country"))
+            for(ManufacturerCandidates.Record r:candidates)options.add(countryLabel(r.countryAr));
         List<String> sorted=new ArrayList<>(options);Collections.sort(sorted);
         sorted.add(0,t("all"));return sorted.toArray(new String[0]);
     }
@@ -242,10 +254,14 @@ public class LibraryActivity extends Activity {
      * technical product search yielding zero cables.
      */
     private static final class ManufacturerChoice {
-        final String name, recordId;
+        final String name, recordId, countryAr;
         final boolean withVerifiedProducts;
-        ManufacturerChoice(String name,String recordId,boolean verified){
+        ManufacturerChoice(String name,String recordId,boolean verified,String countryAr){
             this.name=name;this.recordId=recordId;this.withVerifiedProducts=verified;
+            this.countryAr=countryAr==null?"":countryAr;
+        }
+        String searchText(){
+            return (name+" "+CountryNames.searchText(countryAr)).toLowerCase(Locale.ROOT);
         }
     }
     private void manufacturerChooser(){
@@ -256,11 +272,11 @@ public class LibraryActivity extends Activity {
         for(VerifiedCableData.Cable cable:VerifiedCableData.all()){
             String name=cable.brand;
             if(known.add(name.toLowerCase(Locale.ROOT)))
-                all.add(new ManufacturerChoice(name,null,true));
+                all.add(new ManufacturerChoice(name,null,true,cable.countryAr));
         }
         for(ManufacturerCandidates.Record candidate:candidates){
             if(known.add(candidate.name.toLowerCase(Locale.ROOT)))
-                all.add(new ManufacturerChoice(candidate.name,candidate.id,false));
+                all.add(new ManufacturerChoice(candidate.name,candidate.id,false,candidate.countryAr));
         }
         Collections.sort(all,(x,y)->x.name.compareToIgnoreCase(y.name));
         final List<ManufacturerChoice> visible=new ArrayList<>(all);
@@ -288,11 +304,12 @@ public class LibraryActivity extends Activity {
             visible.clear();
             String text=query.getText().toString().trim().toLowerCase(Locale.ROOT);
             for(ManufacturerChoice item:all)
-                if(text.isEmpty()||item.name.toLowerCase(Locale.ROOT).contains(text))
+                if(text.isEmpty()||item.searchText().contains(text))
                     visible.add(item);
             adapter.clear();
             adapter.add(t("all")+"  ("+all.size()+")");
             for(ManufacturerChoice item:visible)adapter.add(item.name+"   ·   "+
+                (item.countryAr.isEmpty()?"":countryLabel(item.countryAr)+"   ·   ")+
                 t(item.withVerifiedProducts?"hasVerifiedCables":"pendingReviewOnly"));
             adapter.notifyDataSetChanged();
         };
@@ -425,10 +442,13 @@ public class LibraryActivity extends Activity {
         if(companyMatches==null)return;
         companyMatches.removeAllViews();
         final String term=pendingQuery.trim().toLowerCase(Locale.ROOT);
-        if(term.isEmpty())return; // keep the home screen clean
+        final String countryAr=countryKeyAr();
+        if(term.isEmpty()&&countryAr==null)return; // keep the home screen clean
         final List<ManufacturerCandidates.Record> matches=new ArrayList<>();
         for(ManufacturerCandidates.Record r:candidates){
-            if(r.searchKey().contains(term))matches.add(r);
+            if(!term.isEmpty()&&!r.searchKey().contains(term))continue;
+            if(countryAr!=null&&!countryAr.equals(r.countryAr))continue;
+            matches.add(r);
         }
         if(matches.isEmpty())return;
         final LinearLayout summary=row();
@@ -448,7 +468,7 @@ public class LibraryActivity extends Activity {
             companyMatches.addView(card,cp);
             LinearLayout info=col();card.addView(info,new LinearLayout.LayoutParams(0,-2,1));
             info.addView(label(record.name,14,LibraryUi.WHITE,true));
-            info.addView(label(record.countryAr+"  ·  "+t("pendingReviewOnly"),11,LibraryUi.MUTED,false));
+            info.addView(label(CountryNames.name(record.countryAr,I18n.index(this))+"  ·  "+t("pendingReviewOnly"),11,LibraryUi.MUTED,false));
             TextView arrow=label(isAr()?"‹":"›",22,GOLD,true);
             card.addView(arrow,LibraryUi.lp(this,27,-1));
             LibraryUi.tappable(card,record.name,()->openDirectory(record.name));
@@ -457,6 +477,8 @@ public class LibraryActivity extends Activity {
     private void openDirectory(String query){
         Intent i=new Intent(this,ManufacturerDirectoryActivity.class);
         if(query!=null&&!query.trim().isEmpty())i.putExtra("query",query.trim());
+        String countryAr=countryKeyAr();
+        if(countryAr!=null)i.putExtra("country",countryAr);
         startActivity(i);
     }
     private void resultCard(VerifiedCableData.Cable c){
@@ -550,6 +572,7 @@ public class LibraryActivity extends Activity {
         String[] values={"العربية","English","Français","Türkçe"};
         new AlertDialog.Builder(this).setTitle(t("langTitle"))
             .setSingleChoiceItems(values,I18n.index(this),(dlg,index)->{
+                country="*"; // stored as a language-specific display name
                 I18n.set(this,I18n.CODES[index]);dlg.dismiss();renderPage();
             }).setNegativeButton(t("cancel"),null).show();
     }
