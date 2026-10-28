@@ -20,7 +20,7 @@ echo "OK: signed with the permanent key (SHA-256 $ACTUAL)"
 
 BADGING="$("$BT/aapt" dump badging "$APK")"
 grep -Fq "package: name='com.ab.cablecost.app'" <<<"$BADGING" || { echo "FAIL: unexpected package name"; exit 1; }
-grep -Fq "versionName='0.5.5-stable'" <<<"$BADGING" || { echo "FAIL: unexpected versionName"; exit 1; }
+grep -Fq "versionName='0.6.0-phase1'" <<<"$BADGING" || { echo "FAIL: unexpected versionName"; exit 1; }
 grep -Fq "targetSdkVersion:'35'" <<<"$BADGING" || { echo "FAIL: unexpected targetSdkVersion"; exit 1; }
 if grep -Fq "application-debuggable" <<<"$BADGING"; then echo "FAIL: release APK is debuggable"; exit 1; fi
 grep -E "^package:|^sdkVersion|^targetSdkVersion|^application-label:" <<<"$BADGING"
