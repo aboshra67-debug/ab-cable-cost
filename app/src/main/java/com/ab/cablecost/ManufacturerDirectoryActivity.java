@@ -364,7 +364,7 @@ public final class ManufacturerDirectoryActivity extends Activity {
             if(obj instanceof ManufacturerCandidates.Record) {
                 ManufacturerCandidates.Record r=(ManufacturerCandidates.Record)obj;
                 main.setText(r.name);
-                sub.setText(r.id+"  ·  "+CountryNames.name(r.countryAr,I18n.index(this)));
+                sub.setText(r.id+"  ·  "+CountryNames.name(r.countryAr,I18n.index(ManufacturerDirectoryActivity.this)));
                 status.setText("◷ "+tr("pendingReviewOnly")+"  ·  "+reviewLabel(r));
             }else{
                 BrandEntry b=(BrandEntry)obj;
