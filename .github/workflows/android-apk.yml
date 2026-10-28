@@ -191,7 +191,8 @@ jobs:
             adb shell am start -W -n com.ab.cablecost/.MainActivity
             sleep 2
             adb shell pidof com.ab.cablecost
-            python3 tools/verify_library_ui.py
+            python3 tools/verify_library_ui.py > ui_check.log 2>&1 || { tail -15 ui_check.log | while IFS= read -r l; do echo "::error::UI: $l"; done; exit 1; }
+            cat ui_check.log
             python3 tools/verify_country_filter_ui.py com.ab.cablecost || echo "::warning::Advisory Country-filter UI test failed; see the UI preview artifact"
       - name: Publish UI preview
         if: always()
