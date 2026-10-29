@@ -1,0 +1,19 @@
+SOURCE: https://catalog.belden.com/techdata/EN/9842_techdata.pdf
+FETCHED: 2026-10-29 (pass 1 = full text; pass 2 re-extracted the numbers and agreed on every value used)
+Description: "RS-485, 2 Pair 24AWG (7x32) Tinned Copper, PE Insulation, Overall Beldfoil®+Tinned Copper Braid(90%) Shield, PVC Outer Jacket, CM"
+Conductor row: "Pair(s)", "2", "24 AWG", "7x32", "TC - Tinned Copper"
+Insulation row: "PE - Polyethylene", "0.022 in (0.56 mm)", "0.068 in (1.7 mm)", "White/Blue Stripe & Blue/White Stripe, White/Orange Stripe & Orange/White Stripe"
+Outer Shield row 1: "Tape", "Bi-Laminate (Alum+Poly)", "100%", "24 AWG (7x32) TC"
+Outer Shield row 2: "Braid", "Tinned Copper (TC)", "90%"
+Jacket: "PVC - Polyvinyl Chloride 0.035 in (0.89 mm)"
+Overall Cable Diameter (Nominal): 0.340 in (8.64 mm)
+Voltage: "300 V (CM), 30 V (UL AWM 2919)"
+Max current: "2.1 Amps per Conductor at 25ºC"
+Nominal Conductor DCR: "24 Ohm/1000ft (79 Ohm/km)"
+Nom Outer Shield DCR: "2.2 Ohm/1000ft (7.2 Ohm/km)"
+Capacitance cond-to-cond: "12.8 pF/ft (42.0 pF/m)"
+Capacitance cond-to-other: "23 pF/ft (75 pF/m)"
+Characteristic impedance: "120 Ohm"
+Temperature: "UL Temperature Operating 80°C -30°C to +80°C"
+Standards: "UL 1685 UL Loading, IEC 60332-1-2"; "NEC / UL Compliance: Article 800, CM"; "AWM Compliance: AWM 2919"; "CPR Euroclass: Eca"; "Other Standard Compliance(s): DMX-512"
+Revision: "Revision Number: 0.736 Revision Date: 02-25-2026"

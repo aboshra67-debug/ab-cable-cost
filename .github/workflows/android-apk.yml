@@ -120,9 +120,9 @@ jobs:
           mkdir -p dist ci-only
           gradle :app:assembleRelease --no-daemon --stacktrace
           cp app/build/outputs/apk/release/app-release.apk dist/AB_Cable_Cost_V0.5.5_stable_signed.apk
-          # Same key, versionCode 14: used ONLY by the emulator job to prove in-place updates work.
-          gradle :app:assembleRelease --no-daemon --stacktrace -PabVersionCode=14
-          cp app/build/outputs/apk/release/app-release.apk ci-only/ci_upgrade_test_versionCode14.apk
+          # Same key, versionCode 15: used ONLY by the emulator job to prove in-place updates work.
+          gradle :app:assembleRelease --no-daemon --stacktrace -PabVersionCode=15
+          cp app/build/outputs/apk/release/app-release.apk ci-only/ci_upgrade_test_versionCode15.apk
           rm -f "$AB_KEYSTORE_FILE"
       - name: Verify release APK (v1/v2/v3, pinned certificate, not debuggable, aligned)
         if: steps.keycheck.outputs.has_key == 'true'
@@ -288,7 +288,7 @@ jobs:
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          script: bash tools/ci_release_install_test.sh stable/AB_Cable_Cost_V0.5.5_stable_signed.apk upgrade/ci_upgrade_test_versionCode14.apk
+          script: bash tools/ci_release_install_test.sh stable/AB_Cable_Cost_V0.5.5_stable_signed.apk upgrade/ci_upgrade_test_versionCode15.apk
 
   # Alternative to repository secrets: publish the UNSIGNED release build (plus Google's apksigner)
   # on a throw-away branch so it can be signed OFFLINE with the permanent key.

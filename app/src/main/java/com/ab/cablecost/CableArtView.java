@@ -108,7 +108,8 @@ public final class CableArtView extends View {
     /** Records whose datasheet lists exactly two conductors (one pair). The
      * fan illustration is schematic; this only keeps the conductor count honest. */
     private static boolean isTwoConductor(String id){
-        return "BELDEN_5120FN".equals(id)||"BELDEN_9841".equals(id)||"BELDEN_8760".equals(id);
+        return "BELDEN_5120FN".equals(id)||"BELDEN_9841".equals(id)||"BELDEN_8760".equals(id)
+            ||"BELDEN_8761".equals(id)||"BELDEN_3105A".equals(id)||"BELDEN_8451".equals(id);
     }
     private void drawBody(Canvas c){
         if(cable.category.equals("Coax"))coax(c);

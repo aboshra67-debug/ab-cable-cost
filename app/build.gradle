@@ -8,7 +8,7 @@ def abSetting = { String name ->
     return value ? value.toString() : null
 }
 // -PabVersionCode=NN lets CI build a higher-numbered copy to prove in-place updates work.
-def abVersionCode = (abSetting('abVersionCode') ?: '13').toInteger()
+def abVersionCode = (abSetting('abVersionCode') ?: '14').toInteger()
 
 android {
     namespace 'com.ab.cablecost'
@@ -19,7 +19,7 @@ android {
         minSdk 23
         targetSdk 35
         versionCode abVersionCode
-        versionName '0.6.0-phase1'
+        versionName '0.6.1-library'
         manifestPlaceholders = [appLabel: 'AB Cable Cost']
     }
 

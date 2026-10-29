@@ -129,7 +129,7 @@ tap(searchfield)
 adb("shell","input","text","Hengtong")
 tree,company_hit=wait("Matching companies","library_company_search.xml")
 assert node(tree,"Hengtong Group") is not None
-# V0.5.5: the library holds 8 source-backed cable records, so the counter reads "N / 8".
-assert node(tree,"/ 8") is not None
+# V0.6.1: the library holds 13 source-backed cable records, so the counter reads "N / 13".
+assert node(tree,"/ 13") is not None
 screen("company_search_in_library.png")
 print("PASS: companies discoverable in main library, 150 candidate directory, separate 9 brands, sourced cables preserved, bilingual details/3D")

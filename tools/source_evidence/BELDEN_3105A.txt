@@ -1,0 +1,20 @@
+SOURCE: https://catalog.belden.com/techdata/EN/3105A_techdata.pdf
+FETCHED: 2026-10-29 (pass 1 = full text; pass 2 re-extracted the numbers and agreed on every value used)
+Title: "RS-485, 1 Pr, 22AWG, Str TC, PE Ins, OS+TC Brd, PVC Jkt, CM, PLTC, Sun"
+Description: "RS-485, 120 Ohm, 1 pair 22AWG (7x30) tinned copper Datalene® insulaton, Overall Foil + 65% Tinned Copper Braid, PVC jacket, CM, PLTC, SUN RES and oil-resistant"
+Conductor row: "Pair(s) 1 22 AWG 7x30 TC - Tinned Copper"
+Insulation: "PE - Polyethylene (Foam)", "0.029 in (0.74 mm)", "0.087 in (2.2 mm)", "White/Blue Stripe & Blue/White Stripe"
+Outer shield: "Tape Bi-Laminate (Alum+Poly)", "100%", drain wire "22 AWG (7x30) TC"; "Braid Tinned Copper (TC) 65%"
+Jacket: "PVC - Polyvinyl Chloride", "0.047 in (1.2 mm)"
+Overall Cable Diameter (Nominal): 0.294 in (7.47 mm)
+Voltage: "300 V (CM, PLTC)"
+Temperature: "UL Temperature Operating 60°C -20°C to +60°C"
+Nominal Conductor DCR: "18.2 Ohm/1000ft"
+Nom Outer Shield DCR: "4.685 Ohm/1000ft (15.37 Ohm/km)"
+Max current: "6 Amps per Conductor at 30ºC"
+Capacitance cond-to-cond: "11 pF/ft (36 pF/m)"
+Capacitance cond-to-other: "20.9 pF/ft (68.6 pF/m)"
+Characteristic impedance: "120 Ohm"
+Velocity of propagation: "78%"
+Standards: "UL 1685 UL Loading, IEC 60332-1-2"; "NEC / UL Compliance: Article 725, Article 800, CM, PLTC"; "CPR Euroclass: Eca"; "Environmental Suitability: Indoor, Outdoor, Sunlight Resistance, Oil Resistance"
+Revision: "Revision Number: 0.598 Revision Date: 02-20-2026"

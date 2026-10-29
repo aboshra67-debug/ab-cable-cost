@@ -1,0 +1,17 @@
+SOURCE: https://catalog.belden.com/techdata/EN/8761_techdata.pdf
+FETCHED: 2026-10-29 (pass 1 = full text; pass 2 re-extracted the numbers and agreed on every value used)
+Description: "Electronic, 2 Conductor 22AWG (7x30) Tinned Copper, PE Insulation, Overall Beldfoil® Shield, PVC Outer Jacket, CM"
+Conductor row: "1", "22 AWG", "7x30", "TC - Tinned Copper"
+Insulation: "PE - Polyethylene", "0.017 in (0.43 mm)", "0.062 in (1.6 mm)", "Black, Clear"
+Shield: "Tape Bi-Laminate (Alum+Poly) 100%"; drain wire "22 AWG (7x30) TC"
+Jacket: "PVC - Polyvinyl Chloride", "0.025 in (0.64 mm)"
+Overall nominal OD: "0.175 in (4.45 mm)"
+Voltage: "300 V (CM), 300 V (UL AWM 2092)"
+Temperature: "-20°C to +60°C" (maximum operating temperature "60°C")
+Nominal Conductor DCR: "18.2 Ohm/1000ft"
+Max current: "6 Amps per Conductor at 30ºC"
+Capacitance cond-to-cond: "24 pF/ft (79 pF/m)"
+Capacitance cond-to-other: "47 pF/ft (150 pF/m)"
+Characteristic impedance: "64 Ohm"
+Standards: "UL 1685 UL loading , IEC 60332-1-2"; "NEC / UL Compliance: Article 800, CM"; "AWM Compliance: AWM 2092"; "CPR Euroclass: Eca"
+Revision: "Revision Number: 0.537 Revision Date: 02-20-2026"

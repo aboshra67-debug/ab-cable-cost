@@ -1,0 +1,16 @@
+SOURCE: https://catalog.belden.com/techdata/EN/1700A_techdata.pdf
+FETCHED: 2026-10-29 (pass 1 = full text; pass 2 re-extracted the numbers and agreed on every value used)
+Title: "Category 5E+ Cable, 4 Bonded-Pairs, U/UTP, CMR"
+Description: "Category 5E+ Premise Horizontal Cable (350MHz), 4 Bonded-Pairs, 24 AWG Solid Bare Copper Conductors, U/UTP, Riser-CMR, PVC Jacket."
+Conductor row: "24 AWG Solid BC - Bare Copper 4"
+Insulation: "PO - Polyolefin"; colour code white/blue stripe and blue, white/orange stripe and orange, white/green stripe and green, white/brown stripe and brown. Thickness not stated.
+Jacket: "PVC - Polyvinyl Chloride" with ripcord. Thickness not stated.
+Overall nominal OD: "0.202 in (5.13 mm)"
+Voltage: "300 V (CMR)"
+Temperature: UL temperature rating "75°C"; operating "-20°C To +75°C"; installation "0°C To +50°C"
+Max. conductor DCR: "90 Ohm/km (27 Ohm/1000ft)"
+Nominal velocity of propagation: "70%"
+Insertion loss max at 100 MHz: "21.0 dB/100m"
+Impedance: "100 ± 15 Ohm" band 25-100 MHz
+Standards: "Data Category: Category 5e"; "TIA/EIA Compliance: ANSI/TIA-568.2-D Category 5e"; "UL 1666 Riser, FT4, IEC 60332-1-2"; "NEC / UL Compliance: Article 800, CMR"; "CEC / C(UL) Compliance: CMR"
+Revision: "Revision Number: 0.529 Revision Date: 02-20-2026"
