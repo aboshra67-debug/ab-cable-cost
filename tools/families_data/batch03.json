@@ -1,0 +1,176 @@
+[
+ {
+  "id": "GLM-029",
+  "name": "Waskönig + Walter",
+  "status": "read",
+  "page": "https://www.waskoenig.de/en",
+  "hosts": "waskoenig.de",
+  "note": "Power-cable families (the 'lengths' option page omitted)",
+  "fams": [
+   [
+    "Cables < 1 kV",
+    "https://www.waskoenig.de/en/products/cables"
+   ],
+   [
+    "Low-voltage cables 1 kV",
+    "https://www.waskoenig.de/en/products/low-voltage-cables"
+   ],
+   [
+    "Medium-voltage cables",
+    "https://www.waskoenig.de/en/products/medium-voltage-cables"
+   ],
+   [
+    "High-voltage cables",
+    "https://www.waskoenig.de/en/products/high-voltage-cables"
+   ]
+  ]
+ },
+ {
+  "id": "GLM-034",
+  "name": "Italiana Conduttori (CAVEL)",
+  "status": "read",
+  "page": "https://catalogo.cavel.it/",
+  "hosts": "cavel.it",
+  "note": "Italian names as printed",
+  "fams": [
+   [
+    "Cavi Coax 75 Ohm",
+    "https://catalogo.cavel.it/categoria-prodotto/cavi-coax-75-ohm/"
+   ],
+   [
+    "Cavi Coax 50 Ohm",
+    "https://catalogo.cavel.it/categoria-prodotto/cavi-coax-50-ohm/"
+   ],
+   [
+    "Cavi LAN",
+    "https://catalogo.cavel.it/categoria-prodotto/cavi-lan/"
+   ],
+   [
+    "Cavi LAN flessibili",
+    "https://catalogo.cavel.it/categoria-prodotto/cavi-lan-flessibili/"
+   ],
+   [
+    "Cavi videosorveglianza",
+    "https://catalogo.cavel.it/categoria-prodotto/cavi-videosorveglianza/"
+   ],
+   [
+    "Cavi ibridi",
+    "https://catalogo.cavel.it/categoria-prodotto/cavi-ibridi/"
+   ],
+   [
+    "Cavi fibra ottica",
+    "https://cavel.it/cavel-e-fibre-ottiche-con-opticavel/"
+   ],
+   [
+    "Cavi antiroditore",
+    "https://catalogo.cavel.it/categoria-prodotto/cavi-antiroditore/"
+   ],
+   [
+    "Cavi KNX",
+    "https://catalogo.cavel.it/categoria-prodotto/cavi-knx/"
+   ],
+   [
+    "Cavi Cavelsound",
+    "https://catalogo.cavel.it/categoria-prodotto/cavel-sound/"
+   ]
+  ]
+ },
+ {
+  "id": "GLM-038",
+  "name": "Italian Cable Company (ICC)",
+  "status": "read",
+  "page": "https://icc.it/en/cables_catalogue/",
+  "hosts": "icc.it",
+  "note": "Electrical-cables menu categories",
+  "fams": [
+   [
+    "Power cables",
+    "https://icc.it/en/power-cables/"
+   ],
+   [
+    "Automotive cables",
+    "https://icc.it/en/automotive-cables/"
+   ],
+   [
+    "Industrial cables",
+    "https://icc.it/en/industrial-cables/"
+   ],
+   [
+    "Domestic cables",
+    "https://icc.it/en/domestic-cables/"
+   ],
+   [
+    "Lighting cables",
+    "https://icc.it/en/lighting-cables/"
+   ],
+   [
+    "Elevator cables and vertical applications",
+    "https://icc.it/en/elevator-cables-and-vertical-applications/"
+   ],
+   [
+    "Railway cables",
+    "https://icc.it/en/railway-cables/"
+   ],
+   [
+    "Electric welding cables",
+    "https://icc.it/en/electric-welding-cables/"
+   ],
+   [
+    "Panel Wiring",
+    "https://icc.it/en/panel-wiring/"
+   ],
+   [
+    "Thermistor cables",
+    "https://icc.it/en/thermistor-cables/"
+   ],
+   [
+    "Robotics and automation cables",
+    "https://icc.it/en/robotics-cables-automation-cables/"
+   ],
+   [
+    "Ignition circuit cables",
+    "https://icc.it/en/ignition-circuit-cables/"
+   ],
+   [
+    "Electromechanical cables",
+    "https://icc.it/en/electromechanical-cables/"
+   ],
+   [
+    "Electronic cables",
+    "https://icc.it/en/electronic-cables/"
+   ],
+   [
+    "Electromedical cables",
+    "https://icc.it/en/electromedical-cables/"
+   ],
+   [
+    "Heating and defrosting cables",
+    "https://icc.it/en/heating-cables-defrosting-cables/"
+   ],
+   [
+    "Electric radiator and stove cables",
+    "https://icc.it/en/electric-radiator-and-stove-cables/"
+   ],
+   [
+    "Signaling and measuring cables",
+    "https://icc.it/en/signaling-and-measuring-cables/"
+   ],
+   [
+    "Solar cables",
+    "https://icc.it/en/solar-cables/"
+   ],
+   [
+    "Communication systems cables",
+    "https://icc.it/en/communication-systems-cables/"
+   ],
+   [
+    "Instrumentation cables",
+    "https://icc.it/en/instrumentation-cable/"
+   ],
+   [
+    "Custom cables",
+    "https://icc.it/en/icc-ht-custom/"
+   ]
+  ]
+ }
+]
