@@ -1,4 +1,5 @@
 import com.ab.cablecost.CableCatalog;
+import com.ab.cablecost.CableFamilies;
 import com.ab.cablecost.CableLinks;
 import com.ab.cablecost.CountryNames;
 import com.ab.cablecost.VerifiedCableData;
@@ -27,7 +28,7 @@ import java.util.zip.Inflater;
  *   javac -encoding UTF-8 -d build/verify \
  *     app/src/main/java/com/ab/cablecost/CountryNames.java \
  *     app/src/main/java/com/ab/cablecost/VerifiedCableData.java \
- *     app/src/main/java/com/ab/cablecost/CableCatalog.java app/src/main/java/com/ab/cablecost/CableLinks.java tools/VerifyLibraryData.java
+ *     app/src/main/java/com/ab/cablecost/CableCatalog.java app/src/main/java/com/ab/cablecost/CableLinks.java app/src/main/java/com/ab/cablecost/CableFamilies.java tools/VerifyLibraryData.java
  *   java -cp build/verify VerifyLibraryData
  *
  * Fails (exit 1) when a record is incomplete, a number written into a record is
@@ -148,11 +149,13 @@ public final class VerifyLibraryData {
         String json=new String(inflate(Base64.getDecoder().decode(asset)),StandardCharsets.UTF_8);
         Matcher m=Pattern.compile("\\[\"(GLM-\\d{3})\",\"([^\"]*)\",\"([^\"]*)\"").matcher(json);
         Set<String> names=new HashSet<>();
+        Map<String,String> nameById=new HashMap<>();
         Set<String> countries=new HashSet<>();
         int rows=0;
         while(m.find()){
             rows++;
             names.add(m.group(2).toLowerCase(Locale.ROOT));
+            nameById.put(m.group(1),m.group(2));
             countries.add(m.group(3));
             if(!CountryNames.known(m.group(3)))fail(m.group(1)+": country '"+m.group(3)+"' has no translation");
         }
@@ -164,6 +167,33 @@ public final class VerifyLibraryData {
         if(chooser.size()!=150)
             fail("manufacturer chooser would list "+chooser.size()+" names, expected 150 "
                 +"(a verified brand name must match its directory name exactly)");
+        // ---- cable families: names + official links only, never specifications --------------
+        int famCount=0;
+        for(CableFamilies.Source src:CableFamilies.sources().values()){
+            String cn=nameById.get(src.companyId);
+            if(cn==null){fail("families: unknown company id "+src.companyId);continue;}
+            if(!cn.equalsIgnoreCase(src.companyName))
+                fail("families: "+src.companyId+" is '"+cn+"' in the directory but '"+src.companyName+"' here");
+            if(!src.status.equals("read")&&!src.status.equals("unreadable"))fail("families: bad status for "+src.companyId);
+            if(!src.pageUrl.startsWith("https://"))fail("families: "+src.companyId+" page url is not https");
+            if(!src.retrieved.matches("\\d{4}-\\d{2}-\\d{2}"))fail("families: "+src.companyId+" has no retrieval date");
+            List<CableFamilies.Family> fl=CableFamilies.forCompany(src.companyId);
+            if(src.read()&&fl.isEmpty())fail("families: "+src.companyId+" is 'read' but has no families");
+            if(!src.read()&&!fl.isEmpty())fail("families: "+src.companyId+" is 'unreadable' but lists families");
+            Set<String> seenNames=new HashSet<>();
+            List<String> hosts=List.of(src.hosts.split(","));
+            hostOk(src.companyId,src.pageUrl,hosts);
+            for(CableFamilies.Family f:fl){
+                famCount++;
+                if(f.name.trim().isEmpty()||!f.name.equals(f.name.trim()))fail("families: "+src.companyId+" bad name '"+f.name+"'");
+                if(!seenNames.add(f.name))fail("families: "+src.companyId+" duplicate name '"+f.name+"'");
+                if(f.url.contains(" ")||f.url.contains("\""))fail("families: "+src.companyId+" bad url for '"+f.name+"'");
+                hostOk(src.companyId,f.url,hosts);
+            }
+        }
+        for(CableFamilies.Family f:CableFamilies.all())
+            if(CableFamilies.sourceFor(f.companyId)==null)fail("families: "+f.companyId+" has families but no source entry");
+        System.out.println("cable families="+famCount+" companies covered="+CableFamilies.sources().size());
         // ---- result ------------------------------------------------------------
         System.out.println("records="+cables.size()+" companies="+rows+" countries="+countries.size()
             +" chooser="+chooser.size());
@@ -173,6 +203,12 @@ public final class VerifyLibraryData {
         }
         System.out.println("PASS: verified records complete, numbers match archived datasheet quotes, "
             +"150 companies / 33 countries translated, chooser lists exactly 150 names");
+    }
+    private static void hostOk(String id,String url,List<String> hosts){
+        if(!url.startsWith("https://")){fail("families: "+id+" non-https url "+url);return;}
+        String host=url.substring(8).split("[/?#]",2)[0].toLowerCase(Locale.ROOT);
+        for(String h:hosts)if(host.equals(h)||host.endsWith("."+h))return;
+        fail("families: "+id+" url host '"+host+"' is not an allowed official host "+hosts);
     }
     private VerifyLibraryData(){}
 }

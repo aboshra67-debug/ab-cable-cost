@@ -131,6 +131,11 @@ public final class I18n {
         add("catalogCandidate","رابط الكتالوج/المنتجات المرشح (غير متحقق)","Candidate catalog/product link (unchecked)","Lien catalogue candidat (non vérifié)","Aday katalog bağlantısı (doğrulanmadı)");
         add("researchReference","مصدر البحث الأولي — لا يثبت المنتج","Research lead — not product proof","Source de recherche — pas une preuve","Araştırma kaynağı — ürün kanıtı değil");
         add("openLinks","عرض الروابط المرشحة","View candidate links","Voir liens candidats","Aday bağlantıları aç");
+        add("cableFamilies","أنواع الكابلات","Cable families","Familles de câbles","Kablo aileleri");
+        add("familiesTitle","أسماء بس من كتالوج الشركة الرسمي — من غير مواصفات","Names only, from the company's official catalog — no specs","Noms seulement, du catalogue officiel — sans spécifications","Yalnızca resmi katalogdaki adlar — özellik yok");
+        add("familiesNotCollected","لسه ما اتجمعتش للشركة دي","Not collected yet for this company","Pas encore collecté pour cette société","Bu şirket için henüz toplanmadı");
+        add("familiesUnreadable","تعذّر قراءة صفحة الشركة من هنا — مفيش تخمين","The company page could not be read from here — nothing guessed","Page de la société illisible ici — rien deviné","Şirket sayfası buradan okunamadı — tahmin yok");
+        add("familiesOfficialPage","صفحة الشركة","Company page","Page de la société","Şirket sayfası");
         add("unverifiedLinkCaution","الروابط دي لسه قيد الفحص","These links are not verified","Liens non vérifiés","Bağlantılar doğrulanmadı");
         add("manufacturerDirectory","دليل الشركات — 150 قيد المراجعة","Company directory — 150 under review","Annuaire — 150 à vérifier","Şirket rehberi — 150 incelenecek");
         add("matchingCompanies","شركات مطابقة للبحث","Matching companies","Entreprises correspondantes","Eşleşen şirketler");

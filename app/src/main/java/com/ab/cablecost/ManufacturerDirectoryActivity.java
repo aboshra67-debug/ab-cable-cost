@@ -299,7 +299,8 @@ public final class ManufacturerDirectoryActivity extends Activity {
             (r.hasCatalogCandidate()?r.catalogCandidate:tr("notPublished"))+
             "\n"+tr("researchReference")+": "+
             (ManufacturerCandidates.isHttps(r.referenceUrl)?r.referenceUrl:tr("notPublished"))+
-            (r.notes.isEmpty()?"":"\n"+r.notes);
+            (r.notes.isEmpty()?"":"\n"+r.notes)+
+            "\n\n"+tr("cableFamilies")+": "+familiesSummary(r.id);
         List<String> options=new ArrayList<>();
         List<String> urls=new ArrayList<>();
         if(r.hasWebsiteCandidate()) {
@@ -319,6 +320,34 @@ public final class ManufacturerDirectoryActivity extends Activity {
                     .setItems(options.toArray(new String[0]),(x,index)->openUrl(urls.get(index)))
                     .setNegativeButton(tr("cancel"),null).show();
             })
+            .setNeutralButton(tr("cableFamilies"),(dlg,which)->openFamilies(r))
+            .setNegativeButton(tr("back"),null).show();
+    }
+    private String familiesSummary(String companyId){
+        CableFamilies.Source src=CableFamilies.sourceFor(companyId);
+        if(src==null)return tr("familiesNotCollected");
+        if(!src.read())return tr("familiesUnreadable");
+        return String.valueOf(CableFamilies.forCompany(companyId).size());
+    }
+    /** Names of cable families the company lists on its own official page; no specifications. */
+    private void openFamilies(ManufacturerCandidates.Record r){
+        CableFamilies.Source src=CableFamilies.sourceFor(r.id);
+        if(src==null||!src.read()){
+            String why=src==null?tr("familiesNotCollected"):tr("familiesUnreadable");
+            AlertDialog.Builder b=new AlertDialog.Builder(this).setTitle(r.name).setMessage(why)
+                .setNegativeButton(tr("back"),null);
+            if(src!=null&&ManufacturerCandidates.isHttps(src.pageUrl))
+                b.setPositiveButton(tr("openLinks"),(dlg,which)->openUrl(src.pageUrl));
+            b.show();
+            return;
+        }
+        List<CableFamilies.Family> fams=CableFamilies.forCompany(r.id);
+        String[] names=new String[fams.size()];
+        for(int i=0;i<names.length;i++)names[i]=fams.get(i).name;
+        new AlertDialog.Builder(this)
+            .setTitle(r.name+" ("+names.length+") — "+tr("familiesTitle"))
+            .setItems(names,(dlg,index)->openUrl(fams.get(index).url))
+            .setPositiveButton(tr("familiesOfficialPage"),(dlg,which)->openUrl(src.pageUrl))
             .setNegativeButton(tr("back"),null).show();
     }
     private void openBrand(BrandEntry b){
