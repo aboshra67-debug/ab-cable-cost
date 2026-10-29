@@ -174,12 +174,12 @@ public final class VerifyLibraryData {
             if(cn==null){fail("families: unknown company id "+src.companyId);continue;}
             if(!cn.equalsIgnoreCase(src.companyName))
                 fail("families: "+src.companyId+" is '"+cn+"' in the directory but '"+src.companyName+"' here");
-            if(!src.status.equals("read")&&!src.status.equals("unreadable"))fail("families: bad status for "+src.companyId);
+            if(!src.status.equals("read")&&!src.status.equals("unreadable")&&!src.status.equals("none_listed"))fail("families: bad status for "+src.companyId);
             if(!src.pageUrl.startsWith("https://"))fail("families: "+src.companyId+" page url is not https");
             if(!src.retrieved.matches("\\d{4}-\\d{2}-\\d{2}"))fail("families: "+src.companyId+" has no retrieval date");
             List<CableFamilies.Family> fl=CableFamilies.forCompany(src.companyId);
             if(src.read()&&fl.isEmpty())fail("families: "+src.companyId+" is 'read' but has no families");
-            if(!src.read()&&!fl.isEmpty())fail("families: "+src.companyId+" is 'unreadable' but lists families");
+            if(!src.read()&&!fl.isEmpty())fail("families: "+src.companyId+" is '"+src.status+"' but lists families");
             Set<String> seenNames=new HashSet<>();
             List<String> hosts=List.of(src.hosts.split(","));
             hostOk(src.companyId,src.pageUrl,hosts);

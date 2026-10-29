@@ -74,6 +74,13 @@ S=[
 ("GLM-065","Nexans","unreadable","https://www.nexans.com/electrification-solutions/product-catalog/","nexans.com","The page lists market segments only, not cable families",[]),
 ("GLM-103","Ducab","unreadable","https://ducab.com/download-center/","ducab.com","The official page could not be fetched",[]),
 ]
+import glob,json,os
+_here=os.path.dirname(os.path.abspath(__file__))
+for _f in sorted(glob.glob(os.path.join(_here,'families_data','batch*.json'))):
+    for e in json.load(open(_f,encoding='utf-8')):
+        S.append((e['id'],e['name'],e['status'],e['page'],e['hosts'],e['note'],[tuple(x) for x in e['fams']]))
+_ids=[x[0] for x in S]
+assert len(_ids)==len(set(_ids)),'duplicate company in data'
 def j(s): return '"'+s.replace('\\','\\\\').replace('"','\\"')+'"'
 lines=[]
 lines.append('package com.ab.cablecost;\n\nimport java.util.ArrayList;\nimport java.util.Collections;\nimport java.util.LinkedHashMap;\nimport java.util.List;\nimport java.util.Map;\n')
@@ -90,7 +97,8 @@ public final class CableFamilies {
         public final String companyId, name, url;
         Family(String companyId,String name,String url){this.companyId=companyId;this.name=name;this.url=url;}
     }
-    /** status "read": families collected; "unreadable": the official page could not be read from here. */
+    /** status "read": families collected; "unreadable": the official page could not be read from here;
+     *  "none_listed": the page was read but names no cable families. */
     public static final class Source {
         public final String companyId, companyName, status, pageUrl, hosts, note, retrieved;
         Source(String companyId,String companyName,String status,String pageUrl,String hosts,String note,String retrieved){
@@ -120,6 +128,12 @@ lines.append('''    }
     public static Source sourceFor(String companyId){return SOURCES.get(companyId);}
     public static Map<String,Source> sources(){return Collections.unmodifiableMap(SOURCES);}
     public static List<Family> all(){return Collections.unmodifiableList(FAMILIES);}
+    /** Number of companies whose family list was collected (status "read"). */
+    public static int readCount(){
+        int n=0;
+        for(Source s:SOURCES.values())if(s.read())n++;
+        return n;
+    }
     private CableFamilies(){}
 }
 ''')

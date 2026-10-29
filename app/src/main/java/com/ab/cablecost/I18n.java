@@ -135,6 +135,8 @@ public final class I18n {
         add("familiesTitle","أسماء بس من كتالوج الشركة الرسمي — من غير مواصفات","Names only, from the company's official catalog — no specs","Noms seulement, du catalogue officiel — sans spécifications","Yalnızca resmi katalogdaki adlar — özellik yok");
         add("familiesNotCollected","لسه ما اتجمعتش للشركة دي","Not collected yet for this company","Pas encore collecté pour cette société","Bu şirket için henüz toplanmadı");
         add("familiesUnreadable","تعذّر قراءة صفحة الشركة من هنا — مفيش تخمين","The company page could not be read from here — nothing guessed","Page de la société illisible ici — rien deviné","Şirket sayfası buradan okunamadı — tahmin yok");
+        add("familiesNoneListed","الصفحة الرسمية اتقرت بس مفيهاش أسماء أنواع كابلات","The official page was read but names no cable families","La page officielle a été lue mais ne nomme aucune famille de câbles","Resmi sayfa okundu ancak kablo ailesi adı yok");
+        add("familiesProgress","شركات اتجمّعت أنواع كابلاتها","Companies with cable families collected","Sociétés avec familles collectées","Kablo aileleri toplanan şirketler");
         add("familiesOfficialPage","صفحة الشركة","Company page","Page de la société","Şirket sayfası");
         add("unverifiedLinkCaution","الروابط دي لسه قيد الفحص","These links are not verified","Liens non vérifiés","Bağlantılar doğrulanmadı");
         add("manufacturerDirectory","دليل الشركات — 150 قيد المراجعة","Company directory — 150 under review","Annuaire — 150 à vérifier","Şirket rehberi — 150 incelenecek");

@@ -1,0 +1,460 @@
+[
+ {
+  "id": "GLM-013",
+  "name": "The Okonite Company",
+  "status": "read",
+  "page": "https://www.okonite.com/products",
+  "hosts": "okonite.com",
+  "note": "Master Catalog sections (cable sections only)",
+  "fams": [
+   [
+    "Section 2 — Medium Voltage Cables 2.4kV and above",
+    "https://www.okonite.com/product-catalog/section-2"
+   ],
+   [
+    "Section 3 — Single Conductor Low Voltage Cables to 2kV",
+    "https://www.okonite.com/product-catalog/section-3"
+   ],
+   [
+    "Section 4 — Multi-Conductor Low Voltage Cables to 2kV",
+    "https://www.okonite.com/product-catalog/section-4"
+   ],
+   [
+    "Section 5 — Instrumentation Cable",
+    "https://www.okonite.com/product-catalog/section-5"
+   ],
+   [
+    "Section 6 — Special Purpose Cables and Products",
+    "https://www.okonite.com/product-catalog/section-6"
+   ],
+   [
+    "Section 7 — Transportation Wire and Cables",
+    "https://www.okonite.com/product-catalog/section-7"
+   ]
+  ]
+ },
+ {
+  "id": "GLM-014",
+  "name": "Service Wire",
+  "status": "read",
+  "page": "https://www.servicewire.com/",
+  "hosts": "servicewire.com",
+  "note": "Main product categories",
+  "fams": [
+   [
+    "Bare Copper",
+    "https://www.servicewire.com/Products/Bare-Copper.htm"
+   ],
+   [
+    "Single Conductors",
+    "https://www.servicewire.com/Products/Single-Conductors.htm"
+   ],
+   [
+    "Twisted Cables",
+    "https://www.servicewire.com/Products/Twisted-Cables.htm"
+   ],
+   [
+    "Tray Cable",
+    "https://www.servicewire.com/Products/Tray-Cable.htm"
+   ],
+   [
+    "Armored Cables",
+    "https://www.servicewire.com/Products/Armored-Cables.htm"
+   ],
+   [
+    "VFD Cable System",
+    "https://www.servicewire.com/Products/VFD.htm"
+   ],
+   [
+    "Pump",
+    "https://www.servicewire.com/Products/Pump.htm"
+   ]
+  ]
+ },
+ {
+  "id": "GLM-015",
+  "name": "Lake Cable",
+  "status": "read",
+  "page": "https://www.lakecable.com/",
+  "hosts": "lakecable.com",
+  "note": "Top-level families and their sub-categories",
+  "fams": [
+   [
+    "LOW VOLTAGE",
+    "https://www.lakecable.com/low-voltage"
+   ],
+   [
+    "POWER AND CONTROL",
+    "https://www.lakecable.com/power-and-control"
+   ],
+   [
+    "INSTRUMENTATION",
+    "https://www.lakecable.com/instrumentation"
+   ],
+   [
+    "AUDIO AND VIDEO AND LIGHTING",
+    "https://www.lakecable.com/audio-and-video-and-lighting"
+   ],
+   [
+    "PORTABLE CORD",
+    "https://www.lakecable.com/portable-cord"
+   ],
+   [
+    "OEM",
+    "https://www.lakecable.com/oem"
+   ],
+   [
+    "ARMORED CABLE",
+    "https://www.lakecable.com/armored-cable"
+   ],
+   [
+    "DATA CENTER",
+    "https://www.lakecable.com/data-center-products"
+   ],
+   [
+    "LOW VOLTAGE › FIRE ALARM",
+    "https://www.lakecable.com/low-voltage_fire-alarm"
+   ],
+   [
+    "LOW VOLTAGE › BUILDING MANAGEMENT",
+    "https://www.lakecable.com/low-voltage_building-management"
+   ],
+   [
+    "LOW VOLTAGE › SPECIALTY CABLE",
+    "https://www.lakecable.com/low-voltage_specialty-cable"
+   ],
+   [
+    "LOW VOLTAGE › ACCESS CONTROL",
+    "https://www.lakecable.com/low-voltage_access-control"
+   ],
+   [
+    "LOW VOLTAGE › LAKE CABLE CLASSIC",
+    "https://www.lakecable.com/low-voltage_lake-cable-classic"
+   ],
+   [
+    "POWER AND CONTROL › 300V TRAY CABLE",
+    "https://www.lakecable.com/power-and-control_300v-tray-cable"
+   ],
+   [
+    "POWER AND CONTROL › 600V TRAY CABLE",
+    "https://www.lakecable.com/power-and-control_600v-tray-cable"
+   ],
+   [
+    "POWER AND CONTROL › 2KV TRAY CABLE",
+    "https://www.lakecable.com/power-and-control_2kv-tray-cable"
+   ],
+   [
+    "POWER AND CONTROL › SUBSTATION CONTROL",
+    "https://www.lakecable.com/power-and-control_substation-control"
+   ],
+   [
+    "POWER AND CONTROL › TRAFFIC SIGNAL",
+    "https://www.lakecable.com/power-and-control_traffic-signal"
+   ],
+   [
+    "POWER AND CONTROL › MULTI CONDUCTOR",
+    "https://www.lakecable.com/power-and-control-multi-conductor"
+   ],
+   [
+    "POWER AND CONTROL › SINGLE CONDUCTOR",
+    "https://www.lakecable.com/power-and-control-single-conductor"
+   ],
+   [
+    "INSTRUMENTATION › 300V TRAY CABLE",
+    "https://www.lakecable.com/instrumentation_300v-tray-cable"
+   ],
+   [
+    "INSTRUMENTATION › 600V TRAY CABLE",
+    "https://www.lakecable.com/instrumentation_600v-tray-cable"
+   ],
+   [
+    "INSTRUMENTATION › THERMOCOUPLE",
+    "https://www.lakecable.com/instrumentation_thermocouple"
+   ],
+   [
+    "AUDIO AND VIDEO AND LIGHTING › PRO AUDIO",
+    "https://www.lakecable.com/audio-and-video-and-lighting_pro-audio"
+   ],
+   [
+    "AUDIO AND VIDEO AND LIGHTING › SNAKE CABLE",
+    "https://www.lakecable.com/audio-and-video-and-lighting_snake-cable"
+   ],
+   [
+    "AUDIO AND VIDEO AND LIGHTING › MICROPHONE AND INSTRUMENT",
+    "https://www.lakecable.com/audio-and-video-and-lighting_microphone-and-instrument"
+   ],
+   [
+    "AUDIO AND VIDEO AND LIGHTING › SPEAKER",
+    "https://www.lakecable.com/audio-and-video-and-lighting_speaker"
+   ],
+   [
+    "AUDIO AND VIDEO AND LIGHTING › PRO VIDEO",
+    "https://www.lakecable.com/audio-and-video-and-lighting_pro-video"
+   ],
+   [
+    "AUDIO AND VIDEO AND LIGHTING › CAMERA",
+    "https://www.lakecable.com/audio-and-video-and-lighting_camera"
+   ],
+   [
+    "AUDIO AND VIDEO AND LIGHTING › CONTROL AND LIGHTING SYSTEMS",
+    "https://www.lakecable.com/audio-and-video-and-lighting_control-and-lighting-systems"
+   ],
+   [
+    "PORTABLE CORD › 300V",
+    "https://www.lakecable.com/portable-cord_300v"
+   ],
+   [
+    "PORTABLE CORD › 600V",
+    "https://www.lakecable.com/portable-cord_600v"
+   ],
+   [
+    "OEM › ELEVATOR CABLE",
+    "https://www.lakecable.com/elevator-cable"
+   ],
+   [
+    "OEM › PORTABLE CORD",
+    "https://www.lakecable.com/oem-portable-cord"
+   ],
+   [
+    "OEM › POWER WHIPS",
+    "https://www.lakecable.com/oem-power-whips"
+   ],
+   [
+    "OEM › LAKE CABLE CLASSIC",
+    "https://www.lakecable.com/oem-lake-cable-classic"
+   ],
+   [
+    "ARMORED CABLE › INSTRUMENTATION",
+    "https://www.lakecable.com/armored-cable_instrumentation"
+   ],
+   [
+    "ARMORED CABLE › POWER & CONTROL",
+    "https://www.lakecable.com/power-control"
+   ]
+  ]
+ },
+ {
+  "id": "GLM-016",
+  "name": "Remee Products",
+  "status": "read",
+  "page": "https://remee.com/",
+  "hosts": "remee.com",
+  "note": "Menu families (excess-inventory page omitted)",
+  "fams": [
+   [
+    "Activate™ by Remee Powered Cable Solutions",
+    "https://remee.com/lan-premise-cables/activate-powered-cable-solutions/"
+   ],
+   [
+    "Automation Cables/Multimedia Cables",
+    "https://remee.com/automation-multimedia-cables/"
+   ],
+   [
+    "ClearCast™ Broadcast Cables for Premium AV",
+    "https://remee.com/clearcast-broadcast-cables/"
+   ],
+   [
+    "Fiber Optic Cables",
+    "https://remee.com/fiber-optics/"
+   ],
+   [
+    "Fire Alarm Cables",
+    "https://remee.com/fire-alarm-cables/"
+   ],
+   [
+    "REMVolt600™ Power Cables",
+    "https://remee.com/remvolt600-power-cables/"
+   ],
+   [
+    "Renewables™ by Remee",
+    "https://remee.com/renewable-energy-cables/"
+   ],
+   [
+    "STREAMline™ LAN & Premise Cables",
+    "https://remee.com/lan-premise-cables/"
+   ],
+   [
+    "TEKwire™ Audio, Instrumentation, Control & Digital Signaling Cables",
+    "https://remee.com/tekwire-audio-instrumentation-control-digital-signaling-cables/"
+   ],
+   [
+    "Vigilance™ Security, Video, Alarm & Control Cables",
+    "https://remee.com/security-alarm-control-cables/"
+   ],
+   [
+    "Wet Location Copper Cables",
+    "https://remee.com/outside-plant-mining-copper-cables/"
+   ],
+   [
+    "Fiber Optic Cables › Plenum Fiber Optic Cable",
+    "https://remee.com/fiber-optics/indoor-plenum-fiber-optic-cable/"
+   ],
+   [
+    "Fiber Optic Cables › Tight Buffered Fiber Optic Cable",
+    "https://remee.com/fiber-optics/tight-buffer-fiber-optic-cable/"
+   ],
+   [
+    "Fiber Optic Cables › Loose Tube Fiber Optic Cable",
+    "https://remee.com/fiber-optics/loose-tube-fiber-optic-cable/"
+   ]
+  ]
+ },
+ {
+  "id": "GLM-017",
+  "name": "Optical Cable Corporation (OCC)",
+  "status": "read",
+  "page": "https://www.occfiber.com/",
+  "hosts": "occfiber.com",
+  "note": "Grouped as printed under Products",
+  "fams": [
+   [
+    "Fiber Commercial Enterprise › Indoor Cables (Data Center And Assembly)",
+    "https://www.occfiber.com/products/indoor-cables-data-center-and-assembly/"
+   ],
+   [
+    "Fiber Commercial Enterprise › Indoor/Outdoor Cables",
+    "https://www.occfiber.com/products/indooroutdoor-cables/"
+   ],
+   [
+    "Fiber Commercial Enterprise › Indoor/Outdoor Armored Cables",
+    "https://www.occfiber.com/products/indooroutdoor-armored-cables/"
+   ],
+   [
+    "Fiber Commercial Enterprise › Outdoor And Campus Cables",
+    "https://www.occfiber.com/products/outdoor-and-campus-cables/"
+   ],
+   [
+    "Fiber Commercial Enterprise › Fiber In Conduit",
+    "https://www.occfiber.com/products/fiber-in-conduit/"
+   ],
+   [
+    "Fiber Harsh Environment › Outdoor Cables",
+    "https://www.occfiber.com/products/outdoor-cables/"
+   ],
+   [
+    "Fiber Harsh Environment › Military Cables",
+    "https://www.occfiber.com/products/military-cables/"
+   ],
+   [
+    "Fiber Harsh Environment › Broadcast Deployable Cables",
+    "https://www.occfiber.com/products/broadcast-deployable-cables/"
+   ],
+   [
+    "Fiber Harsh Environment › Mining Cables",
+    "https://www.occfiber.com/products/mining-cables/"
+   ],
+   [
+    "Fiber Harsh Environment › Shipboard Cables",
+    "https://www.occfiber.com/products/shipboard-cables/"
+   ],
+   [
+    "Fiber Harsh Environment › Industrial Cables",
+    "https://www.occfiber.com/products/industrial-cables/"
+   ],
+   [
+    "Copper Cables › Category 6A",
+    "https://www.occfiber.com/products/category-6a/"
+   ],
+   [
+    "Copper Cables › Category 6",
+    "https://www.occfiber.com/products/category-6/"
+   ],
+   [
+    "Copper Cables › Category 5e",
+    "https://www.occfiber.com/products/category-5e/"
+   ],
+   [
+    "Hybrid Cables › Broadcast Deployable Cables",
+    "https://www.occfiber.com/products/broadcast-deployable-cables-hybrid-cables/"
+   ],
+   [
+    "Hybrid Cables › Indoor/Outdoor Hybrid Cables",
+    "https://www.occfiber.com/products/indooroutdoor-hybrid-cables/"
+   ],
+   [
+    "Hybrid Cables › Outdoor Cables",
+    "https://www.occfiber.com/products/outdoor-cables-hybrid-cables/"
+   ],
+   [
+    "Hybrid Cables › Industrial Cables",
+    "https://www.occfiber.com/products/industrial-cables-hybrid-cables/"
+   ],
+   [
+    "Hybrid Cables › Fiber To Antenna Cables",
+    "https://www.occfiber.com/products/fiber-to-antenna-cables/"
+   ],
+   [
+    "Hybrid Cables › Mining Cables",
+    "https://www.occfiber.com/products/mining-cables-hybrid-cables/"
+   ],
+   [
+    "Hybrid Cables › Slimline Hybrid Cables",
+    "https://www.occfiber.com/products/slimline-hybrid-cables/"
+   ],
+   [
+    "Deployable Solutions › Military Cables",
+    "https://www.occfiber.com/products/military-cables-deployable-solutions/"
+   ],
+   [
+    "Deployable Solutions › Broadcast Deployable Cables",
+    "https://www.occfiber.com/products/broadcast-deployable-cables-deployable-solutions/"
+   ]
+  ]
+ },
+ {
+  "id": "GLM-018",
+  "name": "Radix Wire",
+  "status": "read",
+  "page": "https://www.radix-wire.com/",
+  "hosts": "radix-wire.com",
+  "note": "Names from the Products menu; the menu items carry no separate links, so all point to the company page",
+  "fams": [
+   [
+    "High Temp",
+    "https://www.radix-wire.com/"
+   ],
+   [
+    "High Voltage",
+    "https://www.radix-wire.com/"
+   ],
+   [
+    "Industrial Cables",
+    "https://www.radix-wire.com/"
+   ],
+   [
+    "Fire Rated Cables",
+    "https://www.radix-wire.com/"
+   ],
+   [
+    "VW-1",
+    "https://www.radix-wire.com/"
+   ],
+   [
+    "Flare Stack Cable",
+    "https://www.radix-wire.com/"
+   ],
+   [
+    "Tray Cable",
+    "https://www.radix-wire.com/"
+   ]
+  ]
+ },
+ {
+  "id": "GLM-019",
+  "name": "Champlain Cable",
+  "status": "none_listed",
+  "page": "https://www.champcable.com/",
+  "hosts": "champcable.com",
+  "note": "Home page read; it describes the company but names no cable families",
+  "fams": []
+ },
+ {
+  "id": "GLM-023",
+  "name": "LEONI",
+  "status": "none_listed",
+  "page": "https://www.leoni.com/",
+  "hosts": "leoni.com",
+  "note": "Home page lists wiring systems / harness solutions, not cable families",
+  "fams": []
+ }
+]

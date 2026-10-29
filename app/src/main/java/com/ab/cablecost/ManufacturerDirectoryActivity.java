@@ -134,6 +134,9 @@ public final class ManufacturerDirectoryActivity extends Activity {
         caution.setPadding(d(15),d(7),d(15),d(7));
         caution.setBackgroundColor(0xff3d3323);
         root.addView(caution,lp(-1,-2));
+        TextView progress=text(tr("familiesProgress")+": "+CableFamilies.readCount()+" / 150",12,LibraryUi.MUTED,false);
+        progress.setPadding(d(15),d(4),d(15),d(2));
+        root.addView(progress,lp(-1,-2));
         modeTabs();
         searchControls();
         filterControls();
@@ -326,6 +329,7 @@ public final class ManufacturerDirectoryActivity extends Activity {
     private String familiesSummary(String companyId){
         CableFamilies.Source src=CableFamilies.sourceFor(companyId);
         if(src==null)return tr("familiesNotCollected");
+        if("none_listed".equals(src.status))return tr("familiesNoneListed");
         if(!src.read())return tr("familiesUnreadable");
         return String.valueOf(CableFamilies.forCompany(companyId).size());
     }
@@ -333,7 +337,8 @@ public final class ManufacturerDirectoryActivity extends Activity {
     private void openFamilies(ManufacturerCandidates.Record r){
         CableFamilies.Source src=CableFamilies.sourceFor(r.id);
         if(src==null||!src.read()){
-            String why=src==null?tr("familiesNotCollected"):tr("familiesUnreadable");
+            String why=src==null?tr("familiesNotCollected")
+                :"none_listed".equals(src.status)?tr("familiesNoneListed"):tr("familiesUnreadable");
             AlertDialog.Builder b=new AlertDialog.Builder(this).setTitle(r.name).setMessage(why)
                 .setNegativeButton(tr("back"),null);
             if(src!=null&&ManufacturerCandidates.isHttps(src.pageUrl))
